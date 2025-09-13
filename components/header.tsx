@@ -1,141 +1,100 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import { Menu, X, User, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useLanguage } from "./language-provider"
 import { useAuth } from "./auth-provider"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Globe, User, LogOut } from "lucide-react"
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { language, setLanguage, t } = useLanguage()
   const { user, logout } = useAuth()
 
+  const languages = [
+    { code: "fr" as const, name: "Français" },
+    { code: "en" as const, name: "English" },
+    { code: "es" as const, name: "Español" },
+    { code: "de" as const, name: "Deutsch" },
+  ]
+
   return (
-    <header className="bg-black/95 backdrop-blur-sm border-b border-red-500/20 sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">P</span>
-            </div>
-            <span className="text-2xl font-bold text-white">Pixel</span>
+    <header className="border-b bg-white">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <Link href="/" className="text-2xl font-bold text-[#d03232]">
+          Pixel
+        </Link>
+
+        <nav className="hidden md:flex items-center space-x-6">
+          <Link href="/" className="text-gray-600 hover:text-[#d03232] transition-colors">
+            {t("nav.home")}
           </Link>
+          <Link href="/tools" className="text-gray-600 hover:text-[#d03232] transition-colors">
+            {t("nav.tools")}
+          </Link>
+          <Link href="/about" className="text-gray-600 hover:text-[#d03232] transition-colors">
+            {t("nav.about")}
+          </Link>
+          <Link href="/contact" className="text-gray-600 hover:text-[#d03232] transition-colors">
+            {t("nav.contact")}
+          </Link>
+          <Link href="/blog" className="text-gray-600 hover:text-[#d03232] transition-colors">
+            {t("nav.blog")}
+          </Link>
+        </nav>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/tools" className="text-gray-300 hover:text-white transition-colors">
-              {t("nav.tools")}
-            </Link>
-            <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
-              {t("nav.contact")}
-            </Link>
-          </nav>
+        <div className="flex items-center space-x-4">
+          {/* Language Selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Globe className="h-4 w-4 mr-2" />
+                {languages.find((l) => l.code === language)?.name}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {languages.map((lang) => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={language === lang.code ? "bg-gray-100" : ""}
+                >
+                  {lang.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Language Selector */}
+          {/* Auth Buttons */}
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                  <Globe className="w-4 h-4 mr-2" />
-                  {language.toUpperCase()}
+                <Button variant="outline" size="sm">
+                  <User className="h-4 w-4 mr-2" />
+                  {user.name}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-gray-900 border-gray-700">
-                <DropdownMenuItem
-                  onClick={() => setLanguage("en")}
-                  className="text-gray-300 hover:text-white hover:bg-gray-800"
-                >
-                  English
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard">{t("nav.dashboard")}</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setLanguage("fr")}
-                  className="text-gray-300 hover:text-white hover:bg-gray-800"
-                >
-                  Français
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setLanguage("es")}
-                  className="text-gray-300 hover:text-white hover:bg-gray-800"
-                >
-                  Español
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setLanguage("de")}
-                  className="text-gray-300 hover:text-white hover:bg-gray-800"
-                >
-                  Deutsch
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  {t("nav.logout")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* User Menu */}
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                    <User className="w-4 h-4 mr-2" />
-                    {user.name}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-gray-900 border-gray-700">
-                  <DropdownMenuItem onClick={logout} className="text-gray-300 hover:text-white hover:bg-gray-800">
-                    {t("auth.logout")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                    {t("auth.login")}
-                  </Button>
-                </Link>
-                <Link href="/signup">
-                  <Button size="sm" className="bg-red-500 hover:bg-red-600 text-white">
-                    {t("auth.signup")}
-                  </Button>
-                </Link>
-              </div>
-            )}
-
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="md:hidden text-gray-300 hover:text-white"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t border-gray-700 pt-4">
-            <div className="flex flex-col space-y-4">
-              <Link
-                href="/tools"
-                className="text-gray-300 hover:text-white transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t("nav.tools")}
-              </Link>
-              <Link
-                href="/contact"
-                className="text-gray-300 hover:text-white transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t("nav.contact")}
-              </Link>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/login">{t("nav.login")}</Link>
+              </Button>
+              <Button size="sm" className="bg-[#d03232] hover:bg-[#b02828]" asChild>
+                <Link href="/signup">{t("nav.signup")}</Link>
+              </Button>
             </div>
-          </nav>
-        )}
+          )}
+        </div>
       </div>
     </header>
   )

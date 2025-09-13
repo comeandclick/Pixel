@@ -1,166 +1,98 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Link from "next/link"
-import { Zap, Github, Twitter, Instagram, Youtube, Heart } from "lucide-react"
-import { useLanguage } from "@/components/language-provider"
-
-const footerLinks = {
-  tools: [
-    { name: "Background Removal", href: "/tools/background-removal" },
-    { name: "Format Converter", href: "/tools/format-converter" },
-    { name: "Image Compressor", href: "/tools/image-compressor" },
-    { name: "Watermark Remover", href: "/tools/watermark-remover" },
-  ],
-  company: [
-    { name: "nav.contact", href: "/contact" },
-    { name: "About Us", href: "/about" },
-    { name: "Careers", href: "/careers" },
-    { name: "Blog", href: "/blog" },
-  ],
-  support: [
-    { name: "Help Center", href: "/help" },
-    { name: "API Documentation", href: "/docs" },
-    { name: "System Status", href: "https://status.pixel.com" },
-    { name: "footer.support", href: "/support" },
-  ],
-  legal: [
-    { name: "footer.privacy", href: "/privacy" },
-    { name: "footer.terms", href: "/terms" },
-    { name: "Cookies", href: "/cookies" },
-    { name: "GDPR", href: "/gdpr" },
-  ],
-}
-
-const socialLinks = [
-  { name: "GitHub", icon: Github, href: "https://github.com/pixeltools" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com/pixeltools" },
-  { name: "Instagram", icon: Instagram, href: "https://instagram.com/pixeltools" },
-  { name: "YouTube", icon: Youtube, href: "https://youtube.com/@pixeltools" },
-]
+import { useLanguage } from "./language-provider"
 
 export function Footer() {
   const { t } = useLanguage()
 
   return (
-    <footer className="bg-black border-t border-gray-800 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-[#d03232]/5 rounded-full blur-3xl -translate-x-48 -translate-y-48" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#d03232]/5 rounded-full blur-3xl translate-x-48 translate-y-48" />
+    <footer className="bg-gray-900 text-white">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 className="text-xl font-bold text-[#d03232] mb-4">{t("footer.company")}</h3>
+            <p className="text-gray-400 mb-4">{t("footer.description")}</p>
+          </div>
 
-      <div className="relative z-10">
-        {/* Main Footer Content */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="grid lg:grid-cols-6 gap-8">
-            {/* Brand Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="lg:col-span-2 space-y-6"
-            >
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#d03232] to-[#b82828] rounded-xl flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-2xl font-bold text-white">Pixel</span>
-              </Link>
+          <div>
+            <h4 className="font-semibold mb-4">{t("nav.tools")}</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li>
+                <Link href="/tools/background-removal" className="hover:text-white transition-colors">
+                  {t("tools.background_removal")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/tools/image-compressor" className="hover:text-white transition-colors">
+                  {t("tools.image_compressor")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/tools/image-resizer" className="hover:text-white transition-colors">
+                  {t("tools.image_resizer")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/tools/format-converter" className="hover:text-white transition-colors">
+                  {t("tools.format_converter")}
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-              <p className="text-gray-300 leading-relaxed max-w-sm">
-                Professional AI-powered media tools for creators, designers, and businesses. Transform your images with
-                cutting-edge technology.
-              </p>
+          <div>
+            <h4 className="font-semibold mb-4">Company</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li>
+                <Link href="/about" className="hover:text-white transition-colors">
+                  {t("nav.about")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  {t("nav.contact")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="hover:text-white transition-colors">
+                  {t("nav.blog")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/careers" className="hover:text-white transition-colors">
+                  Careers
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-              <div className="flex space-x-4">
-                {socialLinks.map((social) => (
-                  <Link
-                    key={social.name}
-                    href={social.href}
-                    className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-[#d03232]/20 border border-gray-800"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Follow us on ${social.name}`}
-                  >
-                    <social.icon className="w-5 h-5 text-gray-300 hover:text-[#d03232]" />
-                  </Link>
-                ))}
-              </div>
-
-              <div className="flex items-center space-x-4 text-sm text-gray-400">
-                <span>🔒 SOC 2 Compliant</span>
-                <span>•</span>
-                <span>🌍 GDPR Ready</span>
-              </div>
-            </motion.div>
-
-            {/* Links Sections */}
-            {Object.entries(footerLinks).map(([category, links], index) => (
-              <motion.div
-                key={category}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="space-y-4"
-              >
-                <h4 className="text-lg font-semibold text-white capitalize">
-                  {category === "tools" && "Tools"}
-                  {category === "company" && "Company"}
-                  {category === "support" && "Support"}
-                  {category === "legal" && "Legal"}
-                </h4>
-                <ul className="space-y-3">
-                  {links.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-gray-300 hover:text-white transition-colors duration-200 hover:translate-x-1 inline-block"
-                        {...(link.href.startsWith("http") && {
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                        })}
-                      >
-                        {link.name.startsWith("nav.") || link.name.startsWith("footer.") ? t(link.name) : link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
+          <div>
+            <h4 className="font-semibold mb-4">Legal</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li>
+                <Link href="/privacy" className="hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-white transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/cookies" className="hover:text-white transition-colors">
+                  Cookie Policy
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-gray-800">
-          <div className="container mx-auto px-4 py-8">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="flex items-center space-x-2 text-gray-400">
-                <span>© 2024 Pixel Technologies Inc. All rights reserved.</span>
-                <span className="hidden md:inline">•</span>
-                <span className="flex items-center space-x-1">
-                  <span>Made with</span>
-                  <Heart className="w-4 h-4 text-[#d03232] fill-current" />
-                  <span>for creators worldwide</span>
-                </span>
-              </div>
-
-              <div className="flex items-center space-x-6 text-sm text-gray-400">
-                <Link href="/privacy" className="hover:text-white transition-colors">
-                  {t("footer.privacy")}
-                </Link>
-                <Link href="/terms" className="hover:text-white transition-colors">
-                  {t("footer.terms")}
-                </Link>
-                <Link href="/cookies" className="hover:text-white transition-colors">
-                  Cookies
-                </Link>
-                <Link href="/accessibility" className="hover:text-white transition-colors">
-                  Accessibility
-                </Link>
-              </div>
-            </div>
-          </div>
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>
+            &copy; 2024 {t("footer.company")}. {t("footer.rights")}
+          </p>
         </div>
       </div>
     </footer>

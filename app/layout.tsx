@@ -1,48 +1,51 @@
+import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import { Analytics } from "@vercel/analytics/next"
+import { LanguageProvider } from "@/components/language-provider"
+import { AuthProvider } from "@/components/auth-provider"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { AuthProvider } from "@/components/auth-provider"
-import { LanguageProvider } from "@/components/language-provider"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
-import React from "react"
-
-const inter = Inter({ subsets: ["latin"] })
+import { Suspense } from "react"
+import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Pixel - Professional Media Tools",
+  title: "Pixel - AI-Powered Image Editing Tools",
   description:
-    "Transform your media with professional tools. Remove backgrounds, convert formats, compress images, and more.",
-  keywords:
-    "image editor, background removal, format converter, image compression, media tools, photo editor",
+    "Transform your images with our advanced AI tools. Remove backgrounds, compress files, resize images, and much more.",
   generator: "v0.app",
 }
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="en" className="scroll-smooth dark" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+    <html lang="en">
+      <head>
+        <style>{`
+html {
+  font-family: ${GeistSans.style.fontFamily};
+  --font-sans: ${GeistSans.variable};
+  --font-mono: ${GeistMono.variable};
+}
+        `}</style>
+      </head>
+      <body>
+        <Suspense fallback={<div>Loading...</div>}>
           <LanguageProvider>
             <AuthProvider>
-              <Header />
-              <main className="min-h-screen">{children}</main>
-              <Footer />
-              <Toaster />
+              <div className="min-h-screen flex flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
             </AuthProvider>
           </LanguageProvider>
-        </ThemeProvider>
+        </Suspense>
+        <Analytics />
       </body>
     </html>
   )
