@@ -50,6 +50,15 @@ export function Header() {
           <button onClick={scrollToContact} className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.contact")}
           </button>
+          <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+            {t("footer.privacy")}
+          </Link>
+          <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
+            {t("footer.terms")}
+          </Link>
+          <Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors">
+            {t("footer.cookies")}
+          </Link>
         </nav>
 
         <div className="flex items-center space-x-4">
@@ -86,6 +95,9 @@ export function Header() {
               <DropdownMenuContent className="glass-effect">
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard">{t("nav.dashboard")}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">{t("nav.profile")}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="h-4 w-4 mr-2" />

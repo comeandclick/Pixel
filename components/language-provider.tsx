@@ -110,26 +110,52 @@ const translations = {
     "footer.terms": "Conditions",
     "footer.cookies": "Cookies",
 
-    // Legal
-    "legal.privacy.title": "Politique de confidentialité",
-    "legal.terms.title": "Conditions d'utilisation",
-    "legal.cookies.title": "Politique des cookies",
+    // Legal Pages - Privacy
+    "privacy.last_updated": "Dernière mise à jour : Décembre 2024",
+    "privacy.info_collect.title": "Informations que nous collectons",
+    "privacy.info_collect.desc":
+      "Nous collectons les informations que vous nous fournissez directement, par exemple lorsque vous créez un compte, utilisez nos services ou nous contactez pour obtenir de l'aide.",
+    "privacy.how_use.title": "Comment nous utilisons vos informations",
+    "privacy.how_use.desc":
+      "Nous utilisons les informations que nous collectons pour fournir, maintenir et améliorer nos services, traiter les transactions et communiquer avec vous.",
+    "privacy.data_security.title": "Sécurité des données",
+    "privacy.data_security.desc":
+      "Nous mettons en place des mesures de sécurité appropriées pour protéger vos informations personnelles contre l'accès non autorisé, la modification, la divulgation ou la destruction.",
+    "privacy.contact.title": "Nous contacter",
+    "privacy.contact.desc":
+      "Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à privacy@pixel-tools.com.",
 
-    // Features
-    "features.fast_processing": "Traitement Rapide",
-    "features.fast_processing.desc": "Traitement IA ultra-rapide pour tous vos besoins d'édition d'images",
-    "features.secure_private": "Sécurisé et Privé",
-    "features.secure_private.desc": "Vos fichiers sont traités en toute sécurité et jamais stockés sur nos serveurs",
-    "features.easy_to_use": "Facile à Utiliser",
-    "features.easy_to_use.desc": "Interface simple par glisser-déposer que tout le monde peut utiliser",
-    "features.why_choose_pixel": "Pourquoi Choisir Pixel ?",
-    "features.why_choose_pixel.desc":
-      "Outils de qualité professionnelle avec sécurité d'entreprise et simplicité grand public",
+    // Legal Pages - Cookies
+    "cookies.last_updated": "Dernière mise à jour : Décembre 2024",
+    "cookies.what_are.title": "Que sont les cookies",
+    "cookies.what_are.desc":
+      "Les cookies sont de petits fichiers texte qui sont placés sur votre ordinateur ou appareil mobile lorsque vous visitez notre site Web.",
+    "cookies.how_use.title": "Comment nous utilisons les cookies",
+    "cookies.how_use.desc":
+      "Nous utilisons des cookies pour améliorer votre expérience sur notre site Web, mémoriser vos préférences et analyser l'utilisation de notre site.",
+    "cookies.types.title": "Types de cookies que nous utilisons",
+    "cookies.types.essential": "Cookies essentiels : Requis pour le bon fonctionnement du site Web",
+    "cookies.types.analytics":
+      "Cookies d'analyse : Nous aident à comprendre comment les visiteurs utilisent notre site Web",
+    "cookies.types.preferences": "Cookies de préférence : Mémorisent vos paramètres et préférences",
+    "cookies.manage.title": "Gestion des cookies",
+    "cookies.manage.desc":
+      "Vous pouvez contrôler et gérer les cookies via les paramètres de votre navigateur. Veuillez noter que la suppression ou le blocage des cookies peut affecter votre expérience utilisateur.",
 
-    // CTA Section
-    "home.cta.title": "Prêt à transformer vos images ?",
-    "home.cta.subtitle":
-      "Rejoignez des milliers d'utilisateurs qui font confiance à Pixel pour leurs besoins d'édition d'images",
+    // Legal Pages - Terms
+    "terms.last_updated": "Dernière mise à jour : Décembre 2024",
+    "terms.acceptance.title": "Acceptation des conditions",
+    "terms.acceptance.desc":
+      "En accédant et en utilisant les services de Pixel, vous acceptez et acceptez d'être lié par les termes et dispositions de cet accord.",
+    "terms.license.title": "Licence d'utilisation",
+    "terms.license.desc":
+      "L'autorisation est accordée d'utiliser temporairement les services de Pixel à des fins personnelles et non commerciales uniquement.",
+    "terms.disclaimer.title": "Clause de non-responsabilité",
+    "terms.disclaimer.desc":
+      'Les matériaux sur le site Web de Pixel sont fournis "en l\'état". Pixel ne donne aucune garantie, expresse ou implicite.',
+    "terms.contact.title": "Informations de contact",
+    "terms.contact.desc":
+      "Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à legal@pixel-tools.com.",
   },
   en: {
     // Navigation
@@ -229,24 +255,51 @@ const translations = {
     "footer.terms": "Terms",
     "footer.cookies": "Cookies",
 
-    // Legal
-    "legal.privacy.title": "Privacy Policy",
-    "legal.terms.title": "Terms of Service",
-    "legal.cookies.title": "Cookie Policy",
+    // Legal Pages - Privacy
+    "privacy.last_updated": "Last updated: December 2024",
+    "privacy.info_collect.title": "Information We Collect",
+    "privacy.info_collect.desc":
+      "We collect information you provide directly to us, such as when you create an account, use our services, or contact us for support.",
+    "privacy.how_use.title": "How We Use Your Information",
+    "privacy.how_use.desc":
+      "We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.",
+    "privacy.data_security.title": "Data Security",
+    "privacy.data_security.desc":
+      "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.",
+    "privacy.contact.title": "Contact Us",
+    "privacy.contact.desc":
+      "If you have any questions about this privacy policy, please contact us at privacy@pixel-tools.com.",
 
-    // Features
-    "features.fast_processing": "Fast Processing",
-    "features.fast_processing.desc": "Ultra-fast AI processing for all your image editing needs",
-    "features.secure_private": "Secure & Private",
-    "features.secure_private.desc": "Your files are processed securely and never stored on our servers",
-    "features.easy_to_use": "Easy to Use",
-    "features.easy_to_use.desc": "Simple drag-and-drop interface that anyone can use",
-    "features.why_choose_pixel": "Why Choose Pixel?",
-    "features.why_choose_pixel.desc": "Professional-grade tools with enterprise security and consumer simplicity",
+    // Legal Pages - Cookies
+    "cookies.last_updated": "Last updated: December 2024",
+    "cookies.what_are.title": "What Are Cookies",
+    "cookies.what_are.desc":
+      "Cookies are small text files that are placed on your computer or mobile device when you visit our website.",
+    "cookies.how_use.title": "How We Use Cookies",
+    "cookies.how_use.desc":
+      "We use cookies to enhance your experience on our website, remember your preferences, and analyze our site usage.",
+    "cookies.types.title": "Types of Cookies We Use",
+    "cookies.types.essential": "Essential cookies: Required for the website to function properly",
+    "cookies.types.analytics": "Analytics cookies: Help us understand how visitors use our website",
+    "cookies.types.preferences": "Preference cookies: Remember your settings and preferences",
+    "cookies.manage.title": "Managing Cookies",
+    "cookies.manage.desc":
+      "You can control and manage cookies through your browser settings. Please note that removing or blocking cookies may affect your user experience.",
 
-    // CTA Section
-    "home.cta.title": "Ready to transform your images?",
-    "home.cta.subtitle": "Join thousands of users who trust Pixel for their image editing needs",
+    // Legal Pages - Terms
+    "terms.last_updated": "Last updated: December 2024",
+    "terms.acceptance.title": "Acceptance of Terms",
+    "terms.acceptance.desc":
+      "By accessing and using Pixel's services, you accept and agree to be bound by the terms and provision of this agreement.",
+    "terms.license.title": "Use License",
+    "terms.license.desc":
+      "Permission is granted to temporarily use Pixel's services for personal, non-commercial transitory viewing only.",
+    "terms.disclaimer.title": "Disclaimer",
+    "terms.disclaimer.desc":
+      "The materials on Pixel's website are provided on an 'as is' basis. Pixel makes no warranties, expressed or implied.",
+    "terms.contact.title": "Contact Information",
+    "terms.contact.desc":
+      "If you have any questions about these Terms of Service, please contact us at legal@pixel-tools.com.",
   },
   es: {
     // Navigation
@@ -346,27 +399,50 @@ const translations = {
     "footer.terms": "Términos",
     "footer.cookies": "Cookies",
 
-    // Legal
-    "legal.privacy.title": "Política de Privacidad",
-    "legal.terms.title": "Términos de Servicio",
-    "legal.cookies.title": "Política de Cookies",
+    // Legal Pages - Privacy
+    "privacy.last_updated": "Última actualización: Diciembre 2024",
+    "privacy.info_collect.title": "Información que Recopilamos",
+    "privacy.info_collect.desc":
+      "Recopilamos información que nos proporciona directamente, como cuando crea una cuenta, usa nuestros servicios o nos contacta para obtener soporte.",
+    "privacy.how_use.title": "Cómo Usamos Su Información",
+    "privacy.how_use.desc":
+      "Usamos la información que recopilamos para proporcionar, mantener y mejorar nuestros servicios, procesar transacciones y comunicarnos con usted.",
+    "privacy.data_security.title": "Seguridad de Datos",
+    "privacy.data_security.desc":
+      "Implementamos medidas de seguridad apropiadas para proteger su información personal contra acceso no autorizado, alteración, divulgación o destrucción.",
+    "privacy.contact.title": "Contáctanos",
+    "privacy.contact.desc":
+      "Si tiene preguntas sobre esta política de privacidad, contáctenos en privacy@pixel-tools.com.",
 
-    // Features
-    "features.fast_processing": "Procesamiento Rápido",
-    "features.fast_processing.desc":
-      "Procesamiento de IA ultra-rápido para todas sus necesidades de edición de imágenes",
-    "features.secure_private": "Seguro y Privado",
-    "features.secure_private.desc":
-      "Sus archivos se procesan de forma segura y nunca se almacenan en nuestros servidores",
-    "features.easy_to_use": "Fácil de Usar",
-    "features.easy_to_use.desc": "Interfaz simple de arrastrar y soltar que cualquiera puede usar",
-    "features.why_choose_pixel": "¿Por qué Elegir Pixel?",
-    "features.why_choose_pixel.desc":
-      "Herramientas de calidad profesional con seguridad empresarial y simplicidad para el consumidor",
+    // Legal Pages - Cookies
+    "cookies.last_updated": "Última actualización: Diciembre 2024",
+    "cookies.what_are.title": "Qué Son las Cookies",
+    "cookies.what_are.desc":
+      "Las cookies son pequeños archivos de texto que se colocan en su computadora o dispositivo móvil cuando visita nuestro sitio web.",
+    "cookies.how_use.title": "Cómo Usamos las Cookies",
+    "cookies.how_use.desc":
+      "Usamos cookies para mejorar su experiencia en nuestro sitio web, recordar sus preferencias y analizar el uso de nuestro sitio.",
+    "cookies.types.title": "Tipos de Cookies que Usamos",
+    "cookies.types.essential": "Cookies esenciales: Requeridas para que el sitio web funcione correctamente",
+    "cookies.types.analytics": "Cookies de análisis: Nos ayudan a entender cómo los visitantes usan nuestro sitio web",
+    "cookies.types.preferences": "Cookies de preferencias: Recuerdan sus configuraciones y preferencias",
+    "cookies.manage.title": "Gestión de Cookies",
+    "cookies.manage.desc":
+      "Puede controlar y gestionar las cookies a través de la configuración de su navegador. Tenga en cuenta que eliminar o bloquear cookies puede afectar su experiencia de usuario.",
 
-    // CTA Section
-    "home.cta.title": "¿Listo para transformar tus imágenes?",
-    "home.cta.subtitle": "Únete a miles de usuarios que confían en Pixel para sus necesidades de edición de imágenes",
+    // Legal Pages - Terms
+    "terms.last_updated": "Última actualización: Diciembre 2024",
+    "terms.acceptance.title": "Aceptación de Términos",
+    "terms.acceptance.desc":
+      "Al acceder y usar los servicios de Pixel, acepta y está de acuerdo en estar sujeto a los términos y disposiciones de este acuerdo.",
+    "terms.license.title": "Licencia de Uso",
+    "terms.license.desc":
+      "Se otorga permiso para usar temporalmente los servicios de Pixel solo para visualización personal y no comercial.",
+    "terms.disclaimer.title": "Descargo de Responsabilidad",
+    "terms.disclaimer.desc":
+      "Los materiales en el sitio web de Pixel se proporcionan 'tal como están'. Pixel no ofrece garantías, expresas o implícitas.",
+    "terms.contact.title": "Información de Contacto",
+    "terms.contact.desc": "Si tiene preguntas sobre estos Términos de Servicio, contáctenos en legal@pixel-tools.com.",
   },
   de: {
     // Navigation
@@ -466,26 +542,51 @@ const translations = {
     "footer.terms": "Bedingungen",
     "footer.cookies": "Cookies",
 
-    // Legal
-    "legal.privacy.title": "Datenschutzrichtlinie",
-    "legal.terms.title": "Nutzungsbedingungen",
-    "legal.cookies.title": "Cookie-Richtlinie",
+    // Legal Pages - Privacy
+    "privacy.last_updated": "Zuletzt aktualisiert: Dezember 2024",
+    "privacy.info_collect.title": "Informationen, die wir sammeln",
+    "privacy.info_collect.desc":
+      "Wir sammeln Informationen, die Sie uns direkt zur Verfügung stellen, z.B. wenn Sie ein Konto erstellen, unsere Dienste nutzen oder uns für Support kontaktieren.",
+    "privacy.how_use.title": "Wie wir Ihre Informationen verwenden",
+    "privacy.how_use.desc":
+      "Wir verwenden die gesammelten Informationen, um unsere Dienste bereitzustellen, zu warten und zu verbessern, Transaktionen zu verarbeiten und mit Ihnen zu kommunizieren.",
+    "privacy.data_security.title": "Datensicherheit",
+    "privacy.data_security.desc":
+      "Wir implementieren angemessene Sicherheitsmaßnahmen zum Schutz Ihrer persönlichen Informationen vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung.",
+    "privacy.contact.title": "Kontaktieren Sie uns",
+    "privacy.contact.desc":
+      "Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, kontaktieren Sie uns unter privacy@pixel-tools.com.",
 
-    // Features
-    "features.fast_processing": "Schnelle Verarbeitung",
-    "features.fast_processing.desc": "Ultra-schnelle KI-Verarbeitung für alle Ihre Bildbearbeitungsanforderungen",
-    "features.secure_private": "Sicher & Privat",
-    "features.secure_private.desc":
-      "Ihre Dateien werden sicher verarbeitet und niemals auf unseren Servern gespeichert",
-    "features.easy_to_use": "Einfach zu Verwenden",
-    "features.easy_to_use.desc": "Einfache Drag-and-Drop-Oberfläche, die jeder verwenden kann",
-    "features.why_choose_pixel": "Warum Pixel Wählen?",
-    "features.why_choose_pixel.desc": "Professionelle Tools mit Unternehmenssicherheit und Verbrauchereinfachheit",
+    // Legal Pages - Cookies
+    "cookies.last_updated": "Zuletzt aktualisiert: Dezember 2024",
+    "cookies.what_are.title": "Was sind Cookies",
+    "cookies.what_are.desc":
+      "Cookies sind kleine Textdateien, die auf Ihrem Computer oder mobilen Gerät platziert werden, wenn Sie unsere Website besuchen.",
+    "cookies.how_use.title": "Wie wir Cookies verwenden",
+    "cookies.how_use.desc":
+      "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern, Ihre Präferenzen zu speichern und unsere Website-Nutzung zu analysieren.",
+    "cookies.types.title": "Arten von Cookies, die wir verwenden",
+    "cookies.types.essential": "Wesentliche Cookies: Erforderlich für das ordnungsgemäße Funktionieren der Website",
+    "cookies.types.analytics": "Analyse-Cookies: Helfen uns zu verstehen, wie Besucher unsere Website nutzen",
+    "cookies.types.preferences": "Präferenz-Cookies: Speichern Ihre Einstellungen und Präferenzen",
+    "cookies.manage.title": "Cookie-Verwaltung",
+    "cookies.manage.desc":
+      "Sie können Cookies über Ihre Browser-Einstellungen kontrollieren und verwalten. Bitte beachten Sie, dass das Entfernen oder Blockieren von Cookies Ihre Benutzererfahrung beeinträchtigen kann.",
 
-    // CTA Section
-    "home.cta.title": "Bereit, Ihre Bilder zu verwandeln?",
-    "home.cta.subtitle":
-      "Schließen Sie sich Tausenden von Benutzern an, die Pixel für ihre Bildbearbeitungsanforderungen vertrauen",
+    // Legal Pages - Terms
+    "terms.last_updated": "Zuletzt aktualisiert: Dezember 2024",
+    "terms.acceptance.title": "Annahme der Bedingungen",
+    "terms.acceptance.desc":
+      "Durch den Zugriff auf und die Nutzung von Pixels Diensten akzeptieren Sie die Bedingungen und Bestimmungen dieser Vereinbarung.",
+    "terms.license.title": "Nutzungslizenz",
+    "terms.license.desc":
+      "Die Erlaubnis wird erteilt, Pixels Dienste vorübergehend nur für persönliche, nicht-kommerzielle Zwecke zu nutzen.",
+    "terms.disclaimer.title": "Haftungsausschluss",
+    "terms.disclaimer.desc":
+      "Die Materialien auf Pixels Website werden 'wie sie sind' bereitgestellt. Pixel gibt keine Garantien, weder ausdrücklich noch stillschweigend.",
+    "terms.contact.title": "Kontaktinformationen",
+    "terms.contact.desc":
+      "Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns unter legal@pixel-tools.com.",
   },
 }
 
