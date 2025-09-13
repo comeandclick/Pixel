@@ -18,28 +18,49 @@ export function Footer() {
     email: "",
     message: "",
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log("Contact form submitted:", formData)
+    setIsSubmitting(true)
+
+    try {
+      // TODO: Add web3forms integration with API key
+      console.log("Contact form submitted:", formData)
+      setSubmitStatus("success")
+      setFormData({ name: "", email: "", message: "" })
+    } catch (error) {
+      setSubmitStatus("error")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <footer className="bg-card border-t">
+    <footer className="glass-effect border-t">
       <div className="container mx-auto px-4 py-12">
+        {/* Newsletter Section */}
+        <section className="mb-16">
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4 gradient-text">{t("newsletter.title")}</h2>
+            <p className="text-muted-foreground mb-8">{t("newsletter.subtitle")}</p>
+            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <Input placeholder={t("newsletter.placeholder")} className="glass-effect" />
+              <Button className="bg-primary hover:bg-primary/90">{t("newsletter.subscribe")}</Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Section */}
         <section id="contact-section" className="mb-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-6">Contact Us</h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-primary" />
-                  <span className="text-muted-foreground">contact@pixel-tools.com</span>
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  Have questions about our tools or need support? We're here to help you get the most out of Pixel.
-                </p>
+              <h2 className="text-3xl font-bold mb-6 gradient-text">{t("contact.title")}</h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">{t("contact.subtitle")}</p>
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-primary" />
+                <span className="text-muted-foreground">contact@pixel-tools.com</span>
               </div>
             </div>
 
@@ -47,34 +68,39 @@ export function Footer() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Send className="h-5 w-5" />
-                  Send us a message
+                  {t("contact.send")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <Input
-                    placeholder="Your name"
+                    placeholder={t("contact.name")}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
+                    className="glass-effect"
                   />
                   <Input
                     type="email"
-                    placeholder="Your email"
+                    placeholder={t("contact.email")}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
+                    className="glass-effect"
                   />
                   <Textarea
-                    placeholder="Your message"
+                    placeholder={t("contact.message")}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     rows={4}
                     required
+                    className="glass-effect"
                   />
-                  <Button type="submit" className="w-full">
-                    Send Message
+                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isSubmitting}>
+                    {isSubmitting ? t("common.loading") : t("contact.send")}
                   </Button>
+                  {submitStatus === "success" && <p className="text-green-400 text-sm">{t("contact.success")}</p>}
+                  {submitStatus === "error" && <p className="text-red-400 text-sm">{t("contact.error")}</p>}
                 </form>
               </CardContent>
             </Card>
@@ -83,7 +109,7 @@ export function Footer() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-bold text-primary mb-4">{t("footer.company")}</h3>
+            <h3 className="text-xl font-bold mb-4 gradient-text">{t("footer.company")}</h3>
             <p className="text-muted-foreground mb-4">{t("footer.description")}</p>
           </div>
 
@@ -129,34 +155,34 @@ export function Footer() {
             <ul className="space-y-2 text-muted-foreground">
               <li>
                 <Link href="/privacy" className="hover:text-primary transition-colors">
-                  Privacy Policy
+                  {t("footer.privacy")}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="hover:text-primary transition-colors">
-                  Terms of Service
+                  {t("footer.terms")}
                 </Link>
               </li>
               <li>
                 <Link href="/cookies" className="hover:text-primary transition-colors">
-                  Cookie Policy
+                  {t("footer.cookies")}
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-border mt-8 pt-8 flex justify-between items-center">
-          <Link href="https://www.comeandclickagency.com" target="_blank" className="agency-link text-sm">
-            by Come & Click Agency
-          </Link>
-
+        <div className="border-t border-border mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-center text-muted-foreground text-sm">
             &copy; 2024 {t("footer.company")}. {t("footer.rights")}
           </p>
 
-          <Link href="https://www.comeandclickagency.com" target="_blank" className="agency-link text-sm">
-            by Come & Click Agency
+          <Link
+            href="https://www.comeandclickagency.com"
+            target="_blank"
+            className="text-sm text-muted-foreground hover:text-blue-400 transition-colors duration-300"
+          >
+            {t("footer.made_by")}
           </Link>
         </div>
       </div>

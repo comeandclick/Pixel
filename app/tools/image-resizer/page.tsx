@@ -3,21 +3,38 @@
 import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { useLanguage } from "@/components/language-provider"
-import { Upload, Download, Scissors, Loader2 } from "lucide-react"
+import { Upload, Download, Maximize, Loader2, Link } from "lucide-react"
 import { useDropzone } from "react-dropzone"
 
-export default function BackgroundRemovalPage() {
+export default function ImageResizerPage() {
   const { t } = useLanguage()
   const [originalImage, setOriginalImage] = useState<string | null>(null)
   const [processedImage, setProcessedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [width, setWidth] = useState<number>(800)
+  const [height, setHeight] = useState<number>(600)
+  const [maintainAspectRatio, setMaintainAspectRatio] = useState<boolean>(true)
+  const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number }>({
+    width: 0,
+    height: 0,
+  })
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
     if (file) {
       const reader = new FileReader()
       reader.onload = () => {
+        const img = new Image()
+        img.onload = () => {
+          setOriginalDimensions({ width: img.width, height: img.height })
+          setWidth(img.width)
+          setHeight(img.height)
+        }
+        img.src = reader.result as string
         setOriginalImage(reader.result as string)
         setProcessedImage(null)
       }
@@ -33,18 +50,32 @@ export default function BackgroundRemovalPage() {
     multiple: false,
   })
 
-  const processImage = async () => {
+  const handleWidthChange = (newWidth: number) => {
+    setWidth(newWidth)
+    if (maintainAspectRatio && originalDimensions.width > 0) {
+      const aspectRatio = originalDimensions.height / originalDimensions.width
+      setHeight(Math.round(newWidth * aspectRatio))
+    }
+  }
+
+  const handleHeightChange = (newHeight: number) => {
+    setHeight(newHeight)
+    if (maintainAspectRatio && originalDimensions.height > 0) {
+      const aspectRatio = originalDimensions.width / originalDimensions.height
+      setWidth(Math.round(newHeight * aspectRatio))
+    }
+  }
+
+  const resizeImage = async () => {
     if (!originalImage) return
 
     setIsProcessing(true)
 
     try {
-      // Create image element
       const img = new Image()
       img.crossOrigin = "anonymous"
 
       img.onload = () => {
-        // Create canvas
         const canvas = document.createElement("canvas")
         const ctx = canvas.getContext("2d")
 
@@ -53,40 +84,25 @@ export default function BackgroundRemovalPage() {
           return
         }
 
-        canvas.width = img.width
-        canvas.height = img.height
+        canvas.width = width
+        canvas.height = height
 
-        // Draw original image
-        ctx.drawImage(img, 0, 0)
+        // Use high-quality image scaling
+        ctx.imageSmoothingEnabled = true
+        ctx.imageSmoothingQuality = "high"
 
-        // Get image data
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const data = imageData.data
-
-        // Simple background removal algorithm (removes white/light backgrounds)
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i]
-          const g = data[i + 1]
-          const b = data[i + 2]
-
-          // If pixel is close to white/light gray, make it transparent
-          if (r > 200 && g > 200 && b > 200) {
-            data[i + 3] = 0 // Set alpha to 0 (transparent)
-          }
-        }
-
-        // Put processed image data back
-        ctx.putImageData(imageData, 0, 0)
+        // Draw resized image
+        ctx.drawImage(img, 0, 0, width, height)
 
         // Convert to data URL
-        const processedDataUrl = canvas.toDataURL("image/png")
-        setProcessedImage(processedDataUrl)
+        const resizedDataUrl = canvas.toDataURL("image/png")
+        setProcessedImage(resizedDataUrl)
         setIsProcessing(false)
       }
 
       img.src = originalImage
     } catch (error) {
-      console.error("Error processing image:", error)
+      console.error("Error resizing image:", error)
       setIsProcessing(false)
     }
   }
@@ -96,7 +112,7 @@ export default function BackgroundRemovalPage() {
 
     const link = document.createElement("a")
     link.href = processedImage
-    link.download = "background-removed.png"
+    link.download = `resized-${width}x${height}.png`
     link.click()
   }
 
@@ -104,10 +120,8 @@ export default function BackgroundRemovalPage() {
     <div className="min-h-screen py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">{t("tools.background_removal")}</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Supprimez les arrière-plans de vos images instantanément avec l'IA
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">{t("tools.image_resizer")}</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">{t("tools.image_resizer.desc")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
@@ -116,9 +130,9 @@ export default function BackgroundRemovalPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Upload className="h-5 w-5" />
-                Image Originale
+                {t("common.upload")}
               </CardTitle>
-              <CardDescription>Téléchargez votre image pour supprimer l'arrière-plan</CardDescription>
+              <CardDescription>{t("upload.drag_drop")}</CardDescription>
             </CardHeader>
             <CardContent>
               {!originalImage ? (
@@ -131,9 +145,9 @@ export default function BackgroundRemovalPage() {
                   <input {...getInputProps()} />
                   <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                   <p className="text-lg font-medium text-foreground mb-2">
-                    {isDragActive ? "Déposez votre image ici" : "Glissez-déposez votre image"}
+                    {isDragActive ? t("upload.drag_drop") : t("upload.select_files")}
                   </p>
-                  <p className="text-muted-foreground">ou cliquez pour parcourir</p>
+                  <p className="text-muted-foreground">{t("upload.max_size")}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -142,8 +156,47 @@ export default function BackgroundRemovalPage() {
                     alt="Original"
                     className="w-full h-64 object-contain rounded-lg bg-muted"
                   />
+                  <div className="text-sm text-muted-foreground">
+                    Dimensions originales: {originalDimensions.width} × {originalDimensions.height}
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="aspect-ratio"
+                      checked={maintainAspectRatio}
+                      onCheckedChange={(checked) => setMaintainAspectRatio(checked as boolean)}
+                    />
+                    <Label htmlFor="aspect-ratio" className="flex items-center gap-2">
+                      <Link className="h-4 w-4" />
+                      Maintenir les proportions
+                    </Label>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="width">Largeur</Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        value={width}
+                        onChange={(e) => handleWidthChange(Number(e.target.value))}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="height">Hauteur</Label>
+                      <Input
+                        id="height"
+                        type="number"
+                        value={height}
+                        onChange={(e) => handleHeightChange(Number(e.target.value))}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+
                   <Button
-                    onClick={processImage}
+                    onClick={resizeImage}
                     disabled={isProcessing}
                     className="w-full bg-primary hover:bg-primary/90"
                   >
@@ -154,8 +207,8 @@ export default function BackgroundRemovalPage() {
                       </>
                     ) : (
                       <>
-                        <Scissors className="h-4 w-4 mr-2" />
-                        Supprimer l'arrière-plan
+                        <Maximize className="h-4 w-4 mr-2" />
+                        Redimensionner l'image
                       </>
                     )}
                   </Button>
@@ -169,25 +222,27 @@ export default function BackgroundRemovalPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Download className="h-5 w-5" />
-                Image Traitée
+                Image Redimensionnée
               </CardTitle>
-              <CardDescription>Votre image avec l'arrière-plan supprimé</CardDescription>
+              <CardDescription>Votre image aux nouvelles dimensions</CardDescription>
             </CardHeader>
             <CardContent>
               {!processedImage ? (
                 <div className="border-2 border-dashed border-border rounded-lg p-12 text-center">
-                  <Scissors className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-lg font-medium text-foreground mb-2">L'image traitée apparaîtra ici</p>
+                  <Maximize className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-lg font-medium text-foreground mb-2">L'image redimensionnée apparaîtra ici</p>
                   <p className="text-muted-foreground">Téléchargez une image pour commencer</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   <img
                     src={processedImage || "/placeholder.svg"}
-                    alt="Processed"
+                    alt="Resized"
                     className="w-full h-64 object-contain rounded-lg bg-muted"
-                    style={{ backgroundColor: "transparent" }}
                   />
+                  <div className="text-sm text-muted-foreground">
+                    Nouvelles dimensions: {width} × {height}
+                  </div>
                   <Button onClick={downloadImage} className="w-full bg-primary hover:bg-primary/90">
                     <Download className="h-4 w-4 mr-2" />
                     {t("common.download")}

@@ -19,16 +19,21 @@ export function Header() {
   ]
 
   const scrollToContact = () => {
-    const contactSection = document.getElementById("contact-section")
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth" })
+    // If we're not on the homepage, navigate there first
+    if (window.location.pathname !== "/") {
+      window.location.href = "/#contact-section"
+    } else {
+      const contactSection = document.getElementById("contact-section")
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: "smooth" })
+      }
     }
   }
 
   return (
-    <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b glass-effect sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold text-primary">
+        <Link href="/" className="text-2xl font-bold gradient-text">
           Pixel
         </Link>
 
@@ -45,26 +50,23 @@ export function Header() {
           <button onClick={scrollToContact} className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.contact")}
           </button>
-          <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
-            {t("nav.blog")}
-          </Link>
         </nav>
 
         <div className="flex items-center space-x-4">
           {/* Language Selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button variant="ghost" size="sm" className="glass-effect bg-transparent no-border">
                 <Globe className="h-4 w-4 mr-2" />
                 {languages.find((l) => l.code === language)?.name}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="glass-effect">
               {languages.map((lang) => (
                 <DropdownMenuItem
                   key={lang.code}
                   onClick={() => setLanguage(lang.code)}
-                  className={language === lang.code ? "bg-gray-100" : ""}
+                  className={language === lang.code ? "bg-primary/20" : ""}
                 >
                   {lang.name}
                 </DropdownMenuItem>
@@ -76,12 +78,12 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="ghost" size="sm" className="glass-effect bg-transparent no-border">
                   <User className="h-4 w-4 mr-2" />
                   {user.name}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="glass-effect">
                 <DropdownMenuItem asChild>
                   <Link href="/dashboard">{t("nav.dashboard")}</Link>
                 </DropdownMenuItem>
@@ -93,11 +95,11 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="ghost" size="sm" className="glass-effect bg-transparent no-border" asChild>
                 <Link href="/login">{t("nav.login")}</Link>
               </Button>
-              <Button size="sm" className="bg-[#d03232] hover:bg-[#b02828]" asChild>
-                <Link href="/signup">{t("nav.signup")}</Link>
+              <Button size="sm" className="bg-primary hover:bg-primary/90 no-border" asChild>
+                <Link href="/tools">{t("nav.tools")}</Link>
               </Button>
             </div>
           )}

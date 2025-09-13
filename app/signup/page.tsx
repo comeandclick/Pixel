@@ -28,12 +28,12 @@ export default function SignupPage() {
     setError("")
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
+      setError("Les mots de passe ne correspondent pas")
       return
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters")
+      setError("Le mot de passe doit contenir au moins 6 caractères")
       return
     }
 
@@ -41,21 +41,21 @@ export default function SignupPage() {
     if (success) {
       router.push("/dashboard")
     } else {
-      setError("Failed to create account")
+      setError("Échec de la création du compte")
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+      <Card className="w-full max-w-md gradient-card">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">{t("nav.signup")}</CardTitle>
-          <CardDescription>Create your account to get started</CardDescription>
+          <CardTitle className="text-2xl font-bold gradient-text">{t("auth.signup.title")}</CardTitle>
+          <CardDescription>{t("auth.signup.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">Nom complet</Label>
               <Input
                 id="name"
                 type="text"
@@ -63,10 +63,11 @@ export default function SignupPage() {
                 onChange={(e) => setName(e.target.value)}
                 required
                 disabled={isLoading}
+                className="glass-effect"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("auth.email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -74,10 +75,11 @@ export default function SignupPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={isLoading}
+                className="glass-effect"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -85,10 +87,11 @@ export default function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isLoading}
+                className="glass-effect"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{t("auth.confirm_password")}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -96,14 +99,15 @@ export default function SignupPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 disabled={isLoading}
+                className="glass-effect"
               />
             </div>
-            {error && <div className="text-red-600 text-sm text-center">{error}</div>}
-            <Button type="submit" className="w-full bg-[#d03232] hover:bg-[#b02828]" disabled={isLoading}>
+            {error && <div className="text-red-400 text-sm text-center">{error}</div>}
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating account...
+                  Création du compte...
                 </>
               ) : (
                 t("nav.signup")
@@ -111,8 +115,8 @@ export default function SignupPage() {
             </Button>
           </form>
           <div className="mt-6 text-center text-sm">
-            <span className="text-gray-600">Already have an account? </span>
-            <Link href="/login" className="text-[#d03232] hover:underline">
+            <span className="text-muted-foreground">{t("auth.have_account")} </span>
+            <Link href="/login" className="text-primary hover:underline">
               {t("nav.login")}
             </Link>
           </div>

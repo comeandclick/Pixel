@@ -24,8 +24,8 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d03232] mx-auto mb-4"></div>
-          <p>Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>{t("common.loading")}</p>
         </div>
       </div>
     )
@@ -40,50 +40,54 @@ export default function DashboardPage() {
       title: t("tools.background_removal"),
       icon: Scissors,
       href: "/tools/background-removal",
-      color: "text-blue-600",
+      gradient: "from-blue-500/20 to-cyan-500/20",
     },
     {
       title: t("tools.image_compressor"),
       icon: ImageIcon,
       href: "/tools/image-compressor",
-      color: "text-green-600",
+      gradient: "from-green-500/20 to-emerald-500/20",
     },
     {
       title: t("tools.image_resizer"),
       icon: Maximize,
       href: "/tools/image-resizer",
-      color: "text-purple-600",
+      gradient: "from-purple-500/20 to-pink-500/20",
     },
     {
       title: t("tools.format_converter"),
       icon: RefreshCw,
       href: "/tools/format-converter",
-      color: "text-orange-600",
+      gradient: "from-orange-500/20 to-red-500/20",
     },
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, {user.name}!</h1>
-          <p className="text-gray-600">Ready to edit some images today?</p>
+          <h1 className="text-3xl font-bold mb-2 gradient-text">Bienvenue, {user.name} !</h1>
+          <p className="text-muted-foreground">Prêt à éditer des images aujourd'hui ?</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Quick Actions */}
           <div className="lg:col-span-2">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-4">Actions Rapides</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {quickActions.map((action, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
+                <Card key={index} className="gradient-card hover:shadow-lg transition-shadow cursor-pointer group">
                   <Link href={action.href}>
                     <CardHeader className="pb-3">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                          <action.icon className={`h-5 w-5 ${action.color}`} />
+                        <div
+                          className={`w-10 h-10 rounded-lg bg-gradient-to-br ${action.gradient} flex items-center justify-center`}
+                        >
+                          <action.icon className="h-5 w-5 text-white" />
                         </div>
-                        <CardTitle className="text-lg">{action.title}</CardTitle>
+                        <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                          {action.title}
+                        </CardTitle>
                       </div>
                     </CardHeader>
                   </Link>
@@ -94,12 +98,12 @@ export default function DashboardPage() {
 
           {/* Account Info */}
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Account</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-4">Compte</h2>
             <div className="space-y-4">
-              <Card>
+              <Card className="gradient-card">
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-3">
-                    <User className="h-5 w-5 text-gray-600" />
+                    <User className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <CardTitle className="text-base">{user.name}</CardTitle>
                       <CardDescription className="text-sm">{user.email}</CardDescription>
@@ -108,20 +112,20 @@ export default function DashboardPage() {
                 </CardHeader>
               </Card>
 
-              <Card className="cursor-pointer hover:shadow-md transition-shadow">
+              <Card className="gradient-card cursor-pointer hover:shadow-md transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-3">
-                    <History className="h-5 w-5 text-gray-600" />
-                    <CardTitle className="text-base">Recent Activity</CardTitle>
+                    <History className="h-5 w-5 text-muted-foreground" />
+                    <CardTitle className="text-base">Activité Récente</CardTitle>
                   </div>
                 </CardHeader>
               </Card>
 
-              <Card className="cursor-pointer hover:shadow-md transition-shadow">
+              <Card className="gradient-card cursor-pointer hover:shadow-md transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex items-center space-x-3">
-                    <Settings className="h-5 w-5 text-gray-600" />
-                    <CardTitle className="text-base">Settings</CardTitle>
+                    <Settings className="h-5 w-5 text-muted-foreground" />
+                    <CardTitle className="text-base">Paramètres</CardTitle>
                   </div>
                 </CardHeader>
               </Card>
@@ -132,9 +136,9 @@ export default function DashboardPage() {
         {/* All Tools */}
         <div className="mt-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">All Tools</h2>
-            <Button variant="outline" asChild>
-              <Link href="/tools">View All</Link>
+            <h2 className="text-xl font-semibold text-foreground">Tous les Outils</h2>
+            <Button variant="outline" className="glass-effect bg-transparent" asChild>
+              <Link href="/tools">Voir Tout</Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -146,11 +150,11 @@ export default function DashboardPage() {
               { icon: Video, title: t("tools.video_compressor"), href: "/tools/video-compressor" },
               { icon: Droplets, title: t("tools.watermark_remover"), href: "/tools/watermark-remover" },
             ].map((tool, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card key={index} className="gradient-card hover:shadow-md transition-shadow cursor-pointer">
                 <Link href={tool.href}>
                   <CardContent className="p-4 text-center">
-                    <tool.icon className="h-8 w-8 text-gray-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium text-gray-900">{tool.title}</p>
+                    <tool.icon className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm font-medium text-foreground">{tool.title}</p>
                   </CardContent>
                 </Link>
               </Card>
