@@ -3,8 +3,10 @@ import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { LanguageProvider } from "@/components/language-provider"
 import { AuthProvider } from "@/components/auth-provider"
+import { ActivityProvider } from "@/components/activity-tracker"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { ParallaxBackground } from "@/components/parallax-background"
 import { Suspense } from "react"
 import "./globals.css"
 
@@ -23,14 +25,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <ParallaxBackground />
         <Suspense fallback={<div>Loading...</div>}>
           <LanguageProvider>
             <AuthProvider>
-              <div className="min-h-screen flex flex-col">
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
+              <ActivityProvider>
+                <div className="min-h-screen flex flex-col">
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
+              </ActivityProvider>
             </AuthProvider>
           </LanguageProvider>
         </Suspense>

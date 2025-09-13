@@ -4,6 +4,7 @@ import { useAuth } from "@/components/auth-provider"
 import { useLanguage } from "@/components/language-provider"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { RecentActivity } from "@/components/recent-activity"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
@@ -112,25 +113,33 @@ export default function DashboardPage() {
                 </CardHeader>
               </Card>
 
-              <Card className="gradient-card cursor-pointer hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center space-x-3">
-                    <History className="h-5 w-5 text-muted-foreground" />
-                    <CardTitle className="text-base">Activité Récente</CardTitle>
-                  </div>
-                </CardHeader>
-              </Card>
+              <Link href="/dashboard/activity">
+                <Card className="gradient-card cursor-pointer hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center space-x-3">
+                      <History className="h-5 w-5 text-muted-foreground" />
+                      <CardTitle className="text-base">Activité Récente</CardTitle>
+                    </div>
+                  </CardHeader>
+                </Card>
+              </Link>
 
-              <Card className="gradient-card cursor-pointer hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center space-x-3">
-                    <Settings className="h-5 w-5 text-muted-foreground" />
-                    <CardTitle className="text-base">Paramètres</CardTitle>
-                  </div>
-                </CardHeader>
-              </Card>
+              <Link href="/profile">
+                <Card className="gradient-card cursor-pointer hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center space-x-3">
+                      <Settings className="h-5 w-5 text-muted-foreground" />
+                      <CardTitle className="text-base">Paramètres</CardTitle>
+                    </div>
+                  </CardHeader>
+                </Card>
+              </Link>
             </div>
           </div>
+        </div>
+
+        <div className="mt-12">
+          <RecentActivity limit={5} />
         </div>
 
         {/* All Tools */}

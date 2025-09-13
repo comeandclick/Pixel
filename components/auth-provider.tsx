@@ -7,74 +7,120 @@ interface User {
   id: string
   email: string
   name: string
+  isPremium?: boolean
 }
 
 interface AuthContextType {
   user: User | null
-  login: (email: string, password: string) => Promise<boolean>
-  signup: (email: string, password: string, name: string) => Promise<boolean>
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
+  signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>
   logout: () => void
   isLoading: boolean
+  loading: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+const mockUsers: { [email: string]: { password: string; name: string; id: string } } = {
+  "demo@pixel.com": { password: "Demo123!", name: "Demo User", id: "demo-1" },
+  "test@example.com": { password: "Test123!", name: "Test User", id: "test-1" },
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     // Check for saved user session
     const savedUser = localStorage.getItem("user")
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      try {
+        setUser(JSON.parse(savedUser))
+      } catch (error) {
+        console.error("Error parsing saved user:", error)
+        localStorage.removeItem("user")
+      }
     }
-    setIsLoading(false)
+    setLoading(false)
   }, [])
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true)
     try {
-      // Simulate API call
+      // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // Mock successful login
-      const mockUser = {
-        id: "1",
-        email,
-        name: email.split("@")[0],
+      const normalizedEmail = email.toLowerCase().trim()
+      const mockUser = mockUsers[normalizedEmail]
+
+      if (!mockUser) {
+        setIsLoading(false)
+        return { success: false, error: "Aucun compte trouvé avec cet email. Voulez-vous créer un compte ?" }
       }
 
-      setUser(mockUser)
-      localStorage.setItem("user", JSON.stringify(mockUser))
+      if (mockUser.password !== password) {
+        setIsLoading(false)
+        return { success: false, error: "Mot de passe incorrect" }
+      }
+
+      const authenticatedUser: User = {
+        id: mockUser.id,
+        email: normalizedEmail,
+        name: mockUser.name,
+        isPremium: normalizedEmail === "demo@pixel.com", // Demo user gets premium
+      }
+
+      setUser(authenticatedUser)
+      localStorage.setItem("user", JSON.stringify(authenticatedUser))
       setIsLoading(false)
-      return true
+      return { success: true }
     } catch (error) {
       setIsLoading(false)
-      return false
+      return { success: false, error: "Erreur de connexion. Veuillez réessayer." }
     }
   }
 
-  const signup = async (email: string, password: string, name: string): Promise<boolean> => {
+  const signup = async (
+    email: string,
+    password: string,
+    name: string,
+  ): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true)
     try {
-      // Simulate API call
+      // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // Mock successful signup
-      const mockUser = {
-        id: "1",
-        email,
-        name,
+      const normalizedEmail = email.toLowerCase().trim()
+
+      if (mockUsers[normalizedEmail]) {
+        setIsLoading(false)
+        return { success: false, error: "Un compte existe déjà avec cet email" }
       }
 
-      setUser(mockUser)
-      localStorage.setItem("user", JSON.stringify(mockUser))
+      // Create new user
+      const newUserId = `user-${Date.now()}`
+      const newUser: User = {
+        id: newUserId,
+        email: normalizedEmail,
+        name: name.trim(),
+        isPremium: false,
+      }
+
+      // Add to mock database
+      mockUsers[normalizedEmail] = {
+        password,
+        name: name.trim(),
+        id: newUserId,
+      }
+
+      setUser(newUser)
+      localStorage.setItem("user", JSON.stringify(newUser))
       setIsLoading(false)
-      return true
+      return { success: true }
     } catch (error) {
       setIsLoading(false)
-      return false
+      return { success: false, error: "Erreur lors de la création du compte. Veuillez réessayer." }
     }
   }
 
@@ -83,7 +129,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("user")
   }
 
-  return <AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, login, signup, logout, isLoading, loading }}>{children}</AuthContext.Provider>
+  )
 }
 
 export function useAuth() {

@@ -32,6 +32,9 @@ const translations = {
       "Transformez vos images avec nos outils d'IA avancés. Supprimez les arrière-plans, compressez les fichiers, redimensionnez les images et bien plus encore.",
     "home.hero.cta": "Commencer gratuitement",
     "home.hero.secondary": "Voir les outils",
+    "home.cta.title": "Prêt à transformer vos images ?",
+    "home.cta.subtitle":
+      "Rejoignez des milliers d'utilisateurs qui font confiance à Pixel pour leurs besoins d'édition d'images.",
 
     // Tools
     "tools.background_removal": "Suppression d'arrière-plan",
@@ -156,6 +159,19 @@ const translations = {
     "terms.contact.title": "Informations de contact",
     "terms.contact.desc":
       "Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à legal@pixel-tools.com.",
+
+    // Features
+    "features.why_choose_pixel": "Pourquoi choisir Pixel ?",
+    "features.why_choose_pixel.desc":
+      "Découvrez les avantages qui font de Pixel la meilleure solution pour vos besoins d'édition d'images.",
+    "features.fast_processing": "Traitement ultra-rapide",
+    "features.fast_processing.desc":
+      "Nos algorithmes d'IA optimisés traitent vos images en quelques secondes seulement.",
+    "features.secure_private": "Sécurisé et privé",
+    "features.secure_private.desc":
+      "Vos images sont traitées de manière sécurisée et supprimées automatiquement après traitement.",
+    "features.easy_to_use": "Facile à utiliser",
+    "features.easy_to_use.desc": "Interface intuitive conçue pour tous les niveaux, des débutants aux professionnels.",
   },
   en: {
     // Navigation
@@ -177,6 +193,8 @@ const translations = {
       "Transform your images with our advanced AI tools. Remove backgrounds, compress files, resize images, and much more.",
     "home.hero.cta": "Get Started Free",
     "home.hero.secondary": "View Tools",
+    "home.cta.title": "Ready to transform your images?",
+    "home.cta.subtitle": "Join thousands of users who trust Pixel for their image editing needs.",
 
     // Tools
     "tools.background_removal": "Background Removal",
@@ -300,6 +318,17 @@ const translations = {
     "terms.contact.title": "Contact Information",
     "terms.contact.desc":
       "If you have any questions about these Terms of Service, please contact us at legal@pixel-tools.com.",
+
+    // Features
+    "features.why_choose_pixel": "Why Choose Pixel?",
+    "features.why_choose_pixel.desc":
+      "Discover the advantages that make Pixel the best solution for your image editing needs.",
+    "features.fast_processing": "Ultra-fast Processing",
+    "features.fast_processing.desc": "Our optimized AI algorithms process your images in just seconds.",
+    "features.secure_private": "Secure & Private",
+    "features.secure_private.desc": "Your images are processed securely and automatically deleted after processing.",
+    "features.easy_to_use": "Easy to Use",
+    "features.easy_to_use.desc": "Intuitive interface designed for all levels, from beginners to professionals.",
   },
   es: {
     // Navigation
@@ -321,6 +350,8 @@ const translations = {
       "Transforma tus imágenes con nuestras herramientas avanzadas de IA. Elimina fondos, comprime archivos, redimensiona imágenes y mucho más.",
     "home.hero.cta": "Comenzar Gratis",
     "home.hero.secondary": "Ver Herramientas",
+    "home.cta.title": "¿Listo para transformar tus imágenes?",
+    "home.cta.subtitle": "Únete a miles de usuarios que confían en Pixel para sus necesidades de edición de imágenes.",
 
     // Tools
     "tools.background_removal": "Eliminación de Fondo",
@@ -443,6 +474,19 @@ const translations = {
       "Los materiales en el sitio web de Pixel se proporcionan 'tal como están'. Pixel no ofrece garantías, expresas o implícitas.",
     "terms.contact.title": "Información de Contacto",
     "terms.contact.desc": "Si tiene preguntas sobre estos Términos de Servicio, contáctenos en legal@pixel-tools.com.",
+
+    // Features
+    "features.why_choose_pixel": "¿Por qué elegir Pixel?",
+    "features.why_choose_pixel.desc":
+      "Descubre las ventajas que hacen de Pixel la mejor solución para tus necesidades de edición de imágenes.",
+    "features.fast_processing": "Procesamiento ultra-rápido",
+    "features.fast_processing.desc": "Nuestros algoritmos de IA optimizados procesan tus imágenes en solo segundos.",
+    "features.secure_private": "Seguro y privado",
+    "features.secure_private.desc":
+      "Tus imágenes se procesan de forma segura y se eliminan automáticamente después del procesamiento.",
+    "features.easy_to_use": "Fácil de usar",
+    "features.easy_to_use.desc":
+      "Interfaz intuitiva diseñada para todos los niveles, desde principiantes hasta profesionales.",
   },
   de: {
     // Navigation
@@ -464,6 +508,9 @@ const translations = {
       "Verwandeln Sie Ihre Bilder mit unseren fortschrittlichen KI-Tools. Entfernen Sie Hintergründe, komprimieren Sie Dateien, ändern Sie die Bildgröße und vieles mehr.",
     "home.hero.cta": "Kostenlos Starten",
     "home.hero.secondary": "Tools Anzeigen",
+    "home.cta.title": "Bereit, Ihre Bilder zu transformieren?",
+    "home.cta.subtitle":
+      "Schließen Sie sich Tausenden von Benutzern an, die Pixel für ihre Bildbearbeitungsanforderungen vertrauen.",
 
     // Tools
     "tools.background_removal": "Hintergrund Entfernen",
@@ -587,6 +634,19 @@ const translations = {
     "terms.contact.title": "Kontaktinformationen",
     "terms.contact.desc":
       "Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns unter legal@pixel-tools.com.",
+
+    // Features
+    "features.why_choose_pixel": "Warum Pixel wählen?",
+    "features.why_choose_pixel.desc":
+      "Entdecken Sie die Vorteile, die Pixel zur besten Lösung für Ihre Bildbearbeitungsanforderungen machen.",
+    "features.fast_processing": "Ultra-schnelle Verarbeitung",
+    "features.fast_processing.desc":
+      "Unsere optimierten KI-Algorithmen verarbeiten Ihre Bilder in nur wenigen Sekunden.",
+    "features.secure_private": "Sicher und privat",
+    "features.secure_private.desc":
+      "Ihre Bilder werden sicher verarbeitet und nach der Verarbeitung automatisch gelöscht.",
+    "features.easy_to_use": "Einfach zu verwenden",
+    "features.easy_to_use.desc": "Intuitive Benutzeroberfläche für alle Ebenen, von Anfängern bis zu Profis.",
   },
 }
 

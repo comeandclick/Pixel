@@ -41,24 +41,12 @@ export function Header() {
           <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.home")}
           </Link>
-          <Link href="/tools" className="text-muted-foreground hover:text-primary transition-colors">
-            {t("nav.tools")}
-          </Link>
           <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.about")}
           </Link>
           <button onClick={scrollToContact} className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.contact")}
           </button>
-          <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
-            {t("footer.privacy")}
-          </Link>
-          <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
-            {t("footer.terms")}
-          </Link>
-          <Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors">
-            {t("footer.cookies")}
-          </Link>
         </nav>
 
         <div className="flex items-center space-x-4">
@@ -108,10 +96,10 @@ export function Header() {
           ) : (
             <div className="flex items-center space-x-2">
               <Button variant="ghost" size="sm" className="glass-effect bg-transparent no-border" asChild>
-                <Link href="/login">{t("nav.login")}</Link>
+                <Link href="/signup">{t("nav.signup")}</Link>
               </Button>
               <Button size="sm" className="bg-primary hover:bg-primary/90 no-border" asChild>
-                <Link href="/tools">{t("nav.tools")}</Link>
+                <Link href="/login">{t("nav.login")}</Link>
               </Button>
             </div>
           )}
