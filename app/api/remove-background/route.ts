@@ -1,12 +1,21 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Replicate from "replicate"
 
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-})
-
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.REPLICATE_API_TOKEN) {
+      return NextResponse.json(
+        {
+          error: "Background removal service is not configured. Please contact support.",
+        },
+        { status: 503 },
+      )
+    }
+
+    const replicate = new Replicate({
+      auth: process.env.REPLICATE_API_TOKEN,
+    })
+
     const formData = await request.formData()
     const image = formData.get("image") as File
 
