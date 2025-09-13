@@ -1,4 +1,3 @@
-import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
@@ -8,6 +7,7 @@ import { AuthProvider } from "@/components/auth-provider"
 import { LanguageProvider } from "@/components/language-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
+import React from "react"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,7 +15,8 @@ export const metadata: Metadata = {
   title: "Pixel - Professional Media Tools",
   description:
     "Transform your media with professional tools. Remove backgrounds, convert formats, compress images, and more.",
-  keywords: "image editor, background removal, format converter, image compression, media tools, photo editor",
+  keywords:
+    "image editor, background removal, format converter, image compression, media tools, photo editor",
   generator: "v0.app",
 }
 
@@ -27,7 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth dark" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
           <LanguageProvider>
             <AuthProvider>
               <Header />
