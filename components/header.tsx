@@ -2,20 +2,16 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Menu, X, ShoppingCart, User, Globe } from "lucide-react"
+import { Menu, X, User, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useLanguage } from "./language-provider"
-import { useCart } from "./cart-provider"
 import { useAuth } from "./auth-provider"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { language, setLanguage, t } = useLanguage()
-  const { items } = useCart()
   const { user, logout } = useAuth()
-
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
     <header className="bg-black/95 backdrop-blur-sm border-b border-red-500/20 sticky top-0 z-50">
@@ -33,9 +29,6 @@ export function Header() {
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/tools" className="text-gray-300 hover:text-white transition-colors">
               {t("nav.tools")}
-            </Link>
-            <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">
-              {t("nav.pricing")}
             </Link>
             <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
               {t("nav.contact")}
@@ -79,18 +72,6 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Cart */}
-            <Link href="/cart">
-              <Button variant="ghost" size="sm" className="relative text-gray-300 hover:text-white">
-                <ShoppingCart className="w-5 h-5" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
-              </Button>
-            </Link>
 
             {/* User Menu */}
             {user ? (
@@ -144,13 +125,6 @@ export function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t("nav.tools")}
-              </Link>
-              <Link
-                href="/pricing"
-                className="text-gray-300 hover:text-white transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t("nav.pricing")}
               </Link>
               <Link
                 href="/contact"
