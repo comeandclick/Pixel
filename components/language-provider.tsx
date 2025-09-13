@@ -67,6 +67,10 @@ const translations = {
     "tools.watermark_remover": "Watermark Remover",
     "tools.watermark_remover_desc": "Remove unwanted watermarks from images",
     "tools.popular": "Popular",
+    "tools.image_resizer": "Image Resizer",
+    "tools.image_resizer_desc": "Resize images to any dimension while maintaining quality",
+    "tools.video_compressor": "Video Compressor",
+    "tools.video_compressor_desc": "Compress videos while maintaining quality",
 
     // Features
     "features.title": "Powerful Features",
@@ -178,6 +182,12 @@ const translations = {
     "footer.terms": "Terms of Service",
     "footer.cookies": "Cookie Policy",
     "footer.rights": "All rights reserved",
+    "footer.newsletter": "Stay Updated",
+    "footer.newsletter_desc": "Get the latest updates on new features and tools",
+    "footer.subscribe": "Subscribe",
+    "footer.subscribing": "Subscribing...",
+    "footer.newsletter_success": "Subscribed!",
+    "footer.newsletter_success_desc": "You'll receive our latest updates",
 
     // Cart
     "cart.title": "Shopping Cart",
@@ -200,6 +210,10 @@ const translations = {
     "common.next": "Next",
     "common.previous": "Previous",
     "common.close": "Close",
+    "common.file_too_large": "File too large. Please select a smaller file.",
+    "common.invalid_format": "Invalid file format. Please select a supported format.",
+    "common.processing_complete": "Processing complete!",
+    "quality.login_required": "Login required for premium quality",
 
     "cta.ready_to_start": "Ready to get started?",
     "cta.join_thousands": "Join thousands of users who trust Pixel for their media editing needs",
@@ -264,6 +278,10 @@ const translations = {
     "tools.watermark_remover": "Suppresseur de Filigrane",
     "tools.watermark_remover_desc": "Supprimez les filigranes indésirables des images",
     "tools.popular": "Populaire",
+    "tools.image_resizer": "Redimensionneur d'Images",
+    "tools.image_resizer_desc": "Redimensionnez les images à n'importe quelle dimension en maintenant la qualité",
+    "tools.video_compressor": "Compresseur Vidéo",
+    "tools.video_compressor_desc": "Compressez les vidéos en maintenant la qualité",
 
     // Features
     "features.title": "Fonctionnalités Puissantes",
@@ -376,6 +394,12 @@ const translations = {
     "footer.terms": "Conditions d'Utilisation",
     "footer.cookies": "Politique des Cookies",
     "footer.rights": "Tous droits réservés",
+    "footer.newsletter": "Restez Informé",
+    "footer.newsletter_desc": "Recevez les dernières actualizaciones sobre nuevas funciones",
+    "footer.subscribe": "S'abonner",
+    "footer.subscribing": "Abonnement...",
+    "footer.newsletter_success": "Abonné!",
+    "footer.newsletter_success_desc": "Vous recevrez nos dernières mises à jour",
 
     // Cart
     "cart.title": "Panier",
@@ -398,6 +422,10 @@ const translations = {
     "common.next": "Suivant",
     "common.previous": "Précédent",
     "common.close": "Fermer",
+    "common.file_too_large": "Fichier trop volumineux. Veuillez sélectionner un fichier plus petit.",
+    "common.invalid_format": "Format de fichier invalide. Veuillez sélectionner un format supporté.",
+    "common.processing_complete": "Traitement terminé !",
+    "quality.login_required": "Connexion requise pour la qualité premium",
 
     "cta.ready_to_start": "Prêt à commencer ?",
     "cta.join_thousands":
@@ -407,7 +435,7 @@ const translations = {
     "cta.readyToStart": "Prêt à commencer ?",
     "cta.joinThousands": "Rejoignez des milliers d'utilisateurs qui font confiance à Pixel",
     "cta.startFree": "Commencer Gratuitement Aujourd'hui",
-    "cta.noCredit": "Aucune carte de crédit requise",
+    "cta.noCredit": "No se requiere tarjeta de crédito",
   },
   es: {
     // Navigation
@@ -463,6 +491,10 @@ const translations = {
     "tools.watermark_remover": "Eliminador de Marca de Agua",
     "tools.watermark_remover_desc": "Elimina marcas de agua no deseadas de las imágenes",
     "tools.popular": "Popular",
+    "tools.image_resizer": "Redimensionador de Imágenes",
+    "tools.image_resizer_desc": "Redimensiona imágenes a cualquier dimensión manteniendo la calidad",
+    "tools.video_compressor": "Compresor de Video",
+    "tools.video_compressor_desc": "Comprime videos manteniendo la calidad",
 
     // Features
     "features.title": "Características Potentes",
@@ -564,7 +596,7 @@ const translations = {
     "contact.email": "Email",
     "contact.phone": "+1 (555) 123-4567",
     "contact.address": "123 Main St, Ciudad, Estado 12345",
-    "contact.hours": "Lun-Vie 9AM-6PM EST",
+    "contact.hours": "Lun-Vie 9-18 Uhr EST",
 
     // Footer
     "footer.description": "Herramientas profesionales de edición de medios impulsadas por IA",
@@ -575,6 +607,12 @@ const translations = {
     "footer.terms": "Términos de Servicio",
     "footer.cookies": "Política de Cookies",
     "footer.rights": "Todos los derechos reservados",
+    "footer.newsletter": "Manténgase Actualizado",
+    "footer.newsletter_desc": "Reciba las últimas actualizaciones sobre nuevas funciones",
+    "footer.subscribe": "Suscribirse",
+    "footer.subscribing": "Suscribiendo...",
+    "footer.newsletter_success": "¡Suscrito!",
+    "footer.newsletter_success_desc": "Recibirás nuestras últimas actualizaciones",
 
     // Cart
     "cart.title": "Carrito de Compras",
@@ -597,6 +635,10 @@ const translations = {
     "common.next": "Siguiente",
     "common.previous": "Anterior",
     "common.close": "Cerrar",
+    "common.file_too_large": "Archivo demasiado grande. Por favor selecciona un archivo más pequeño.",
+    "common.invalid_format": "Formato de archivo inválido. Por favor selecciona un formato compatible.",
+    "common.processing_complete": "¡Procesamiento completo!",
+    "quality.login_required": "Se requiere iniciar sesión para calidad premium",
 
     "cta.ready_to_start": "¿Listo para comenzar?",
     "cta.join_thousands": "Únete a miles de usuarios que confían en Pixel para sus necesidades de edición de medios",
@@ -661,6 +703,10 @@ const translations = {
     "tools.watermark_remover": "Wasserzeichen-Entferner",
     "tools.watermark_remover_desc": "Entfernen Sie unerwünschte Wasserzeichen von Bildern",
     "tools.popular": "Beliebt",
+    "tools.image_resizer": "Bildgrößen-Änderer",
+    "tools.image_resizer_desc": "Ändern Sie die Bildgröße auf jede Dimension bei gleichbleibender Qualität",
+    "tools.video_compressor": "Video-Kompressor",
+    "tools.video_compressor_desc": "Komprimieren Sie Videos bei gleichbleibender Qualität",
 
     // Features
     "features.title": "Leistungsstarke Funktionen",
@@ -773,6 +819,12 @@ const translations = {
     "footer.terms": "Nutzungsbedingungen",
     "footer.cookies": "Cookie-Richtlinie",
     "footer.rights": "Alle Rechte vorbehalten",
+    "footer.newsletter": "Bleiben Sie auf dem Laufenden",
+    "footer.newsletter_desc": "Erhalten Sie die neuesten Updates zu neuen Funktionen",
+    "footer.subscribe": "Abonnieren",
+    "footer.subscribing": "Abonnieren...",
+    "footer.newsletter_success": "Abonniert!",
+    "footer.newsletter_success_desc": "Sie erhalten unsere neuesten Updates",
 
     // Cart
     "cart.title": "Warenkorb",
@@ -795,6 +847,10 @@ const translations = {
     "common.next": "Weiter",
     "common.previous": "Vorherige",
     "common.close": "Schließen",
+    "common.file_too_large": "Datei zu groß. Bitte wählen Sie eine kleinere Datei.",
+    "common.invalid_format": "Ungültiges Dateiformat. Bitte wählen Sie ein unterstütztes Format.",
+    "common.processing_complete": "Verarbeitung abgeschlossen!",
+    "quality.login_required": "Anmeldung erforderlich für Premium-Qualität",
 
     "cta.ready_to_start": "Bereit anzufangen?",
     "cta.join_thousands":
