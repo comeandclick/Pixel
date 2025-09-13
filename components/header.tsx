@@ -18,27 +18,34 @@ export function Header() {
     { code: "de" as const, name: "Deutsch" },
   ]
 
+  const scrollToContact = () => {
+    const contactSection = document.getElementById("contact-section")
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
-    <header className="border-b bg-white">
+    <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold text-[#d03232]">
+        <Link href="/" className="text-2xl font-bold text-primary">
           Pixel
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-gray-600 hover:text-[#d03232] transition-colors">
+          <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.home")}
           </Link>
-          <Link href="/tools" className="text-gray-600 hover:text-[#d03232] transition-colors">
+          <Link href="/tools" className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.tools")}
           </Link>
-          <Link href="/about" className="text-gray-600 hover:text-[#d03232] transition-colors">
+          <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.about")}
           </Link>
-          <Link href="/contact" className="text-gray-600 hover:text-[#d03232] transition-colors">
+          <button onClick={scrollToContact} className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.contact")}
-          </Link>
-          <Link href="/blog" className="text-gray-600 hover:text-[#d03232] transition-colors">
+          </button>
+          <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
             {t("nav.blog")}
           </Link>
         </nav>
