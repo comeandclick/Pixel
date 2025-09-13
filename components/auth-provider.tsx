@@ -63,6 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setUser(mockUser)
     localStorage.setItem("user", JSON.stringify(mockUser))
+
+    window.location.href = "/profile"
   }
 
   const logout = () => {

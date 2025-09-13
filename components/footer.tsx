@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Zap, Github, Twitter, Instagram, Youtube, Heart } from "lucide-react"
+import { Zap, Github, Twitter, Instagram, Youtube } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 
 const footerLinks = {
@@ -13,30 +13,30 @@ const footerLinks = {
     { name: "Watermark Remover", href: "/tools/watermark-remover" },
   ],
   company: [
-    { name: "nav.contact", href: "/contact" },
-    { name: "About Us", href: "/about" },
+    { name: "nav.pricing", href: "/pricing" },
+    { name: "nav.contact", href: "/#contact" },
     { name: "Careers", href: "/careers" },
     { name: "Blog", href: "/blog" },
   ],
   support: [
     { name: "Help Center", href: "/help" },
     { name: "API Documentation", href: "/docs" },
-    { name: "System Status", href: "https://status.pixel.com" },
+    { name: "Status", href: "/status" },
     { name: "footer.support", href: "/support" },
   ],
   legal: [
     { name: "footer.privacy", href: "/privacy" },
     { name: "footer.terms", href: "/terms" },
     { name: "Cookies", href: "/cookies" },
-    { name: "GDPR", href: "/gdpr" },
+    { name: "Legal", href: "/legal" },
   ],
 }
 
 const socialLinks = [
-  { name: "GitHub", icon: Github, href: "https://github.com/pixeltools" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com/pixeltools" },
-  { name: "Instagram", icon: Instagram, href: "https://instagram.com/pixeltools" },
-  { name: "YouTube", icon: Youtube, href: "https://youtube.com/@pixeltools" },
+  { name: "GitHub", icon: Github, href: "https://github.com/pixel" },
+  { name: "Twitter", icon: Twitter, href: "https://twitter.com/pixel" },
+  { name: "Instagram", icon: Instagram, href: "https://instagram.com/pixel" },
+  { name: "YouTube", icon: Youtube, href: "https://youtube.com/pixel" },
 ]
 
 export function Footer() {
@@ -67,10 +67,7 @@ export function Footer() {
                 <span className="text-2xl font-bold text-white">Pixel</span>
               </Link>
 
-              <p className="text-gray-300 leading-relaxed max-w-sm">
-                Professional AI-powered media tools for creators, designers, and businesses. Transform your images with
-                cutting-edge technology.
-              </p>
+              <p className="text-gray-300 leading-relaxed max-w-sm">{t("footer.description")}</p>
 
               <div className="flex space-x-4">
                 {socialLinks.map((social) => (
@@ -80,17 +77,10 @@ export function Footer() {
                     className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-[#d03232]/20 border border-gray-800"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Follow us on ${social.name}`}
                   >
                     <social.icon className="w-5 h-5 text-gray-300 hover:text-[#d03232]" />
                   </Link>
                 ))}
-              </div>
-
-              <div className="flex items-center space-x-4 text-sm text-gray-400">
-                <span>🔒 SOC 2 Compliant</span>
-                <span>•</span>
-                <span>🌍 GDPR Ready</span>
               </div>
             </motion.div>
 
@@ -116,10 +106,6 @@ export function Footer() {
                       <Link
                         href={link.href}
                         className="text-gray-300 hover:text-white transition-colors duration-200 hover:translate-x-1 inline-block"
-                        {...(link.href.startsWith("http") && {
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                        })}
                       >
                         {link.name.startsWith("nav.") || link.name.startsWith("footer.") ? t(link.name) : link.name}
                       </Link>
@@ -136,12 +122,18 @@ export function Footer() {
           <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="flex items-center space-x-2 text-gray-400">
-                <span>© 2024 Pixel Technologies Inc. All rights reserved.</span>
+                <span>{t("footer.copyright")}</span>
                 <span className="hidden md:inline">•</span>
                 <span className="flex items-center space-x-1">
-                  <span>Made with</span>
-                  <Heart className="w-4 h-4 text-[#d03232] fill-current" />
-                  <span>for creators worldwide</span>
+                  <span>by</span>
+                  <Link
+                    href="https://www.comeandclickagency.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-blue-400 transition-colors duration-200 font-medium"
+                  >
+                    Come & Click
+                  </Link>
                 </span>
               </div>
 
@@ -154,9 +146,6 @@ export function Footer() {
                 </Link>
                 <Link href="/cookies" className="hover:text-white transition-colors">
                   Cookies
-                </Link>
-                <Link href="/accessibility" className="hover:text-white transition-colors">
-                  Accessibility
                 </Link>
               </div>
             </div>

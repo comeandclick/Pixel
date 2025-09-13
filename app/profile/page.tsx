@@ -1,516 +1,650 @@
 "use client"
-import { useState, useEffect } from "react"
+
+import type React from "react"
+
+import { useState, useRef } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { User, Crown, Shield, Bell, Globe, Save, Camera, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { User, Camera, Lock, Bell, Globe, Shield, Trash2, Save, Settings, Eye, EyeOff } from "lucide-react"
 import { useAuth } from "@/components/auth-provider"
 import { useLanguage } from "@/components/language-provider"
 import { useToast } from "@/hooks/use-toast"
-import { useRouter } from "next/navigation"
 
-interface UserProfile {
-  name: string
-  email: string
-  phone: string
-  location: string
-  bio: string
-  website: string
-  company: string
-  jobTitle: string
-  birthDate: string
-  timezone: string
-  language: string
-  emailNotifications: boolean
-  marketingEmails: boolean
-  securityAlerts: boolean
-}
+const defaultAvatars = [
+  "/placeholder.svg?height=100&width=100",
+  "/placeholder.svg?height=100&width=100",
+  "/placeholder.svg?height=100&width=100",
+  "/placeholder.svg?height=100&width=100",
+  "/placeholder.svg?height=100&width=100",
+  "/placeholder.svg?height=100&width=100",
+]
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth()
+  const { user, logout } = useAuth()
   const { t, language, setLanguage } = useLanguage()
   const { toast } = useToast()
-  const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [profile, setProfile] = useState<UserProfile>({
-    name: "",
-    email: "",
-    phone: "",
-    location: "",
+  const [profileData, setProfileData] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
     bio: "",
+    avatar: "/placeholder.svg?height=120&width=120",
+    location: "",
     website: "",
-    company: "",
-    jobTitle: "",
-    birthDate: "",
-    timezone: "America/Los_Angeles",
-    language: "en",
+  })
+
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  })
+
+  const [preferences, setPreferences] = useState({
     emailNotifications: true,
+    pushNotifications: false,
     marketingEmails: false,
-    securityAlerts: true,
+    publicProfile: true,
+    showEmail: false,
+  })
+
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
   })
 
   const [isLoading, setIsLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState("personal")
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login")
-    } else if (user) {
-      // Load user profile data
-      const savedProfile = localStorage.getItem(`profile_${user.id}`)
-      if (savedProfile) {
-        setProfile(JSON.parse(savedProfile))
-      } else {
-        // Initialize with user data
-        setProfile((prev) => ({
-          ...prev,
-          name: user.name,
-          email: user.email,
-          language: language,
-        }))
-      }
-    }
-  }, [user, loading, router, language])
+  const handleProfileUpdate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
 
-  const handleInputChange = (field: keyof UserProfile, value: string | boolean) => {
-    setProfile((prev) => ({ ...prev, [field]: value }))
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false)
+      toast({
+        title: t("common.success"),
+        description: "Profile updated successfully!",
+      })
+    }, 1000)
   }
 
-  const handleSave = async () => {
-    if (!user) return
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast({
+        title: t("common.error"),
+        description: "New passwords don't match",
+      })
+      return
+    }
 
     setIsLoading(true)
 
     // Simulate API call
     setTimeout(() => {
-      localStorage.setItem(`profile_${user.id}`, JSON.stringify(profile))
-
-      // Update language if changed
-      if (profile.language !== language) {
-        setLanguage(profile.language)
-      }
-
       setIsLoading(false)
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      })
       toast({
-        title: "Profile Updated",
-        description: "Your profile has been saved successfully.",
+        title: t("common.success"),
+        description: "Password updated successfully!",
       })
     }, 1000)
   }
 
-  if (loading) {
+  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setProfileData((prev) => ({
+          ...prev,
+          avatar: e.target?.result as string,
+        }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const selectDefaultAvatar = (avatar: string) => {
+    setProfileData((prev) => ({
+      ...prev,
+      avatar,
+    }))
+  }
+
+  const handleDeleteAccount = () => {
+    if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      // Simulate account deletion
+      logout()
+      toast({
+        title: "Account Deleted",
+        description: "Your account has been permanently deleted.",
+      })
+    }
+  }
+
+  if (!user) {
     return (
       <div className="min-h-screen bg-black pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#d03232] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white">Loading profile...</p>
-        </div>
+        <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl max-w-md w-full mx-4">
+          <CardContent className="p-8 text-center">
+            <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2">Not Logged In</h2>
+            <p className="text-gray-400 mb-6">Please log in to access your profile</p>
+            <Button asChild className="bg-red-500 hover:bg-red-600">
+              <a href="/login">Login</a>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
-  if (!user) {
-    return null
-  }
-
-  const tabs = [
-    { id: "personal", label: "Personal Info", icon: User },
-    { id: "preferences", label: "Preferences", icon: Globe },
-    { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "security", label: "Security", icon: Shield },
-  ]
-
   return (
     <div className="min-h-screen bg-black pt-20">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-8"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
         >
-          <div className="flex items-center gap-4 mb-6">
-            <Button asChild variant="ghost" className="text-gray-300 hover:text-white">
-              <Link href="/dashboard">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Link>
-            </Button>
-          </div>
+          <Badge className="bg-[#d03232]/10 text-[#d03232] border border-[#d03232]/20 px-4 py-2 mb-6">
+            <Settings className="w-4 h-4 mr-2" />
+            {t("profile.title")}
+          </Badge>
 
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="relative">
-              <div className="w-24 h-24 bg-gradient-to-br from-[#d03232] to-[#b82828] rounded-full flex items-center justify-center">
-                <User className="w-12 h-12 text-white" />
-              </div>
-              <Button
-                size="sm"
-                className="absolute -bottom-2 -right-2 rounded-full w-8 h-8 p-0 bg-gray-800 hover:bg-gray-700"
-              >
-                <Camera className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-white">{profile.name}</h1>
-                {user.isPremium && (
-                  <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black">
-                    <Crown className="w-4 h-4 mr-1" />
-                    Premium
-                  </Badge>
-                )}
-              </div>
-              <p className="text-gray-300">{profile.email}</p>
-              {profile.jobTitle && profile.company && (
-                <p className="text-gray-400 text-sm">
-                  {profile.jobTitle} at {profile.company}
-                </p>
-              )}
-            </div>
-          </div>
+          <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">{t("profile.edit_profile")}</h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">Manage your account settings and preferences</p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Sidebar Navigation */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:col-span-1"
-          >
-            <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
-              <CardContent className="p-0">
-                <nav className="space-y-1">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center px-4 py-3 text-left transition-colors ${
-                        activeTab === tab.id
-                          ? "bg-[#d03232]/20 text-[#d03232] border-r-2 border-[#d03232]"
-                          : "text-gray-300 hover:text-white hover:bg-gray-800/50"
-                      }`}
-                    >
-                      <tab.icon className="w-5 h-5 mr-3" />
-                      {tab.label}
-                    </button>
-                  ))}
-                </nav>
-              </CardContent>
-            </Card>
-          </motion.div>
+        <div className="max-w-4xl mx-auto">
+          <Tabs defaultValue="profile" className="space-y-8">
+            <TabsList className="grid w-full grid-cols-4 bg-gray-900/50 border border-gray-800">
+              <TabsTrigger value="profile" className="data-[state=active]:bg-[#d03232] data-[state=active]:text-white">
+                Profile
+              </TabsTrigger>
+              <TabsTrigger value="account" className="data-[state=active]:bg-[#d03232] data-[state=active]:text-white">
+                Account
+              </TabsTrigger>
+              <TabsTrigger
+                value="preferences"
+                className="data-[state=active]:bg-[#d03232] data-[state=active]:text-white"
+              >
+                {t("profile.preferences")}
+              </TabsTrigger>
+              <TabsTrigger value="security" className="data-[state=active]:bg-[#d03232] data-[state=active]:text-white">
+                Security
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Main Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-3"
-          >
-            <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-white">{tabs.find((tab) => tab.id === activeTab)?.label}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {activeTab === "personal" && (
-                  <div className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
+            {/* Profile Tab */}
+            <TabsContent value="profile">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <User className="w-5 h-5" />
+                      Profile Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleProfileUpdate} className="space-y-6">
+                      {/* Avatar Section */}
+                      <div className="flex flex-col items-center space-y-4">
+                        <div className="relative">
+                          <img
+                            src={profileData.avatar || "/placeholder.svg"}
+                            alt="Profile"
+                            className="w-32 h-32 rounded-full object-cover border-4 border-gray-700"
+                          />
+                          <Button
+                            type="button"
+                            size="sm"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="absolute bottom-0 right-0 rounded-full w-10 h-10 p-0 bg-[#d03232] hover:bg-[#b82828]"
+                          >
+                            <Camera className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAvatarUpload}
+                          className="hidden"
+                        />
+
+                        <div className="text-center">
+                          <p className="text-sm text-gray-400 mb-3">{t("profile.upload_image")} or choose a default:</p>
+                          <div className="flex gap-2 flex-wrap justify-center">
+                            {defaultAvatars.map((avatar, index) => (
+                              <button
+                                key={index}
+                                type="button"
+                                onClick={() => selectDefaultAvatar(avatar)}
+                                className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-700 hover:border-[#d03232] transition-colors"
+                              >
+                                <img
+                                  src={avatar || "/placeholder.svg"}
+                                  alt={`Avatar ${index + 1}`}
+                                  className="w-full h-full object-cover"
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <Separator className="bg-gray-700" />
+
+                      {/* Profile Fields */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <Label htmlFor="name" className="text-white">
+                            Full Name
+                          </Label>
+                          <Input
+                            id="name"
+                            value={profileData.name}
+                            onChange={(e) => setProfileData((prev) => ({ ...prev, name: e.target.value }))}
+                            className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="email" className="text-white">
+                            Email
+                          </Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={profileData.email}
+                            onChange={(e) => setProfileData((prev) => ({ ...prev, email: e.target.value }))}
+                            className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="location" className="text-white">
+                            Location
+                          </Label>
+                          <Input
+                            id="location"
+                            value={profileData.location}
+                            onChange={(e) => setProfileData((prev) => ({ ...prev, location: e.target.value }))}
+                            className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
+                            placeholder="City, Country"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="website" className="text-white">
+                            Website
+                          </Label>
+                          <Input
+                            id="website"
+                            value={profileData.website}
+                            onChange={(e) => setProfileData((prev) => ({ ...prev, website: e.target.value }))}
+                            className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
+                            placeholder="https://yourwebsite.com"
+                          />
+                        </div>
+                      </div>
+
                       <div>
-                        <Label htmlFor="name" className="text-white">
-                          Full Name
+                        <Label htmlFor="bio" className="text-white">
+                          Bio
                         </Label>
-                        <Input
-                          id="name"
-                          value={profile.name}
-                          onChange={(e) => handleInputChange("name", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
+                        <Textarea
+                          id="bio"
+                          value={profileData.bio}
+                          onChange={(e) => setProfileData((prev) => ({ ...prev, bio: e.target.value }))}
+                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232] min-h-[100px]"
+                          placeholder="Tell us about yourself..."
                         />
                       </div>
+
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-gradient-to-r from-[#d03232] to-[#b82828] hover:from-[#b82828] hover:to-[#a02626] text-white"
+                      >
+                        {isLoading ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-4 h-4 mr-2" />
+                            {t("profile.save_changes")}
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </TabsContent>
+
+            {/* Account Tab */}
+            <TabsContent value="account">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-6"
+              >
+                {/* Password Change */}
+                <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Lock className="w-5 h-5" />
+                      Change Password
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handlePasswordChange} className="space-y-4">
                       <div>
-                        <Label htmlFor="email" className="text-white">
-                          Email
+                        <Label htmlFor="currentPassword" className="text-white">
+                          Current Password
                         </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={profile.email}
-                          onChange={(e) => handleInputChange("email", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                        />
+                        <div className="relative">
+                          <Input
+                            id="currentPassword"
+                            type={showPasswords.current ? "text" : "password"}
+                            value={passwordData.currentPassword}
+                            onChange={(e) => setPasswordData((prev) => ({ ...prev, currentPassword: e.target.value }))}
+                            className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232] pr-10"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowPasswords((prev) => ({ ...prev, current: !prev.current }))}
+                            className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-white"
+                          >
+                            {showPasswords.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="newPassword" className="text-white">
+                          New Password
+                        </Label>
+                        <div className="relative">
+                          <Input
+                            id="newPassword"
+                            type={showPasswords.new ? "text" : "password"}
+                            value={passwordData.newPassword}
+                            onChange={(e) => setPasswordData((prev) => ({ ...prev, newPassword: e.target.value }))}
+                            className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232] pr-10"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowPasswords((prev) => ({ ...prev, new: !prev.new }))}
+                            className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-white"
+                          >
+                            {showPasswords.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="confirmPassword" className="text-white">
+                          Confirm New Password
+                        </Label>
+                        <div className="relative">
+                          <Input
+                            id="confirmPassword"
+                            type={showPasswords.confirm ? "text" : "password"}
+                            value={passwordData.confirmPassword}
+                            onChange={(e) => setPasswordData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                            className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232] pr-10"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowPasswords((prev) => ({ ...prev, confirm: !prev.confirm }))}
+                            className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-white"
+                          >
+                            {showPasswords.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="bg-gradient-to-r from-[#d03232] to-[#b82828] hover:from-[#b82828] hover:to-[#a02626] text-white"
+                      >
+                        {isLoading ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                            Updating...
+                          </>
+                        ) : (
+                          <>
+                            <Lock className="w-4 h-4 mr-2" />
+                            Update Password
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+
+                {/* Language Settings */}
+                <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Globe className="w-5 h-5" />
+                      Language Settings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="text-white">Preferred Language</Label>
+                        <div className="grid grid-cols-2 gap-3 mt-2">
+                          {[
+                            { code: "en", name: "English" },
+                            { code: "fr", name: "Français" },
+                            { code: "es", name: "Español" },
+                            { code: "de", name: "Deutsch" },
+                          ].map((lang) => (
+                            <Button
+                              key={lang.code}
+                              variant={language === lang.code ? "default" : "outline"}
+                              onClick={() => setLanguage(lang.code as any)}
+                              className={
+                                language === lang.code
+                                  ? "bg-[#d03232] hover:bg-[#b82828] text-white"
+                                  : "border-gray-700 text-white hover:bg-gray-800 bg-transparent"
+                              }
+                            >
+                              {lang.name}
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </TabsContent>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+            {/* Preferences Tab */}
+            <TabsContent value="preferences">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Bell className="w-5 h-5" />
+                      Notification Preferences
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="phone" className="text-white">
-                          Phone
-                        </Label>
-                        <Input
-                          id="phone"
-                          value={profile.phone}
-                          onChange={(e) => handleInputChange("phone", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder="+1 (555) 123-4567"
-                        />
+                        <Label className="text-white">Email Notifications</Label>
+                        <p className="text-sm text-gray-400">Receive updates via email</p>
                       </div>
-                      <div>
-                        <Label htmlFor="location" className="text-white">
-                          Location
-                        </Label>
-                        <Input
-                          id="location"
-                          value={profile.location}
-                          onChange={(e) => handleInputChange("location", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder="San Francisco, CA"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="bio" className="text-white">
-                        Bio
-                      </Label>
-                      <Textarea
-                        id="bio"
-                        value={profile.bio}
-                        onChange={(e) => handleInputChange("bio", e.target.value)}
-                        className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232] min-h-[100px]"
-                        placeholder="Tell us about yourself..."
+                      <Switch
+                        checked={preferences.emailNotifications}
+                        onCheckedChange={(checked) =>
+                          setPreferences((prev) => ({ ...prev, emailNotifications: checked }))
+                        }
                       />
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="website" className="text-white">
-                          Website
-                        </Label>
-                        <Input
-                          id="website"
-                          value={profile.website}
-                          onChange={(e) => handleInputChange("website", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder="https://yourwebsite.com"
-                        />
+                        <Label className="text-white">Push Notifications</Label>
+                        <p className="text-sm text-gray-400">Receive browser notifications</p>
                       </div>
-                      <div>
-                        <Label htmlFor="birthDate" className="text-white">
-                          Birth Date
-                        </Label>
-                        <Input
-                          id="birthDate"
-                          type="date"
-                          value={profile.birthDate}
-                          onChange={(e) => handleInputChange("birthDate", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                        />
-                      </div>
+                      <Switch
+                        checked={preferences.pushNotifications}
+                        onCheckedChange={(checked) =>
+                          setPreferences((prev) => ({ ...prev, pushNotifications: checked }))
+                        }
+                      />
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="company" className="text-white">
-                          Company
-                        </Label>
-                        <Input
-                          id="company"
-                          value={profile.company}
-                          onChange={(e) => handleInputChange("company", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder="Your Company"
-                        />
+                        <Label className="text-white">Marketing Emails</Label>
+                        <p className="text-sm text-gray-400">Receive promotional content</p>
                       </div>
+                      <Switch
+                        checked={preferences.marketingEmails}
+                        onCheckedChange={(checked) => setPreferences((prev) => ({ ...prev, marketingEmails: checked }))}
+                      />
+                    </div>
+
+                    <Separator className="bg-gray-700" />
+
+                    <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="jobTitle" className="text-white">
-                          Job Title
-                        </Label>
-                        <Input
-                          id="jobTitle"
-                          value={profile.jobTitle}
-                          onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder="Your Job Title"
-                        />
+                        <Label className="text-white">Public Profile</Label>
+                        <p className="text-sm text-gray-400">Make your profile visible to others</p>
                       </div>
+                      <Switch
+                        checked={preferences.publicProfile}
+                        onCheckedChange={(checked) => setPreferences((prev) => ({ ...prev, publicProfile: checked }))}
+                      />
                     </div>
-                  </div>
-                )}
 
-                {activeTab === "preferences" && (
-                  <div className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <Label htmlFor="language" className="text-white">
-                          Language
-                        </Label>
-                        <Select
-                          value={profile.language}
-                          onValueChange={(value) => handleInputChange("language", value)}
-                        >
-                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-black border-gray-800">
-                            <SelectItem value="en" className="text-white hover:bg-gray-800">
-                              English
-                            </SelectItem>
-                            <SelectItem value="fr" className="text-white hover:bg-gray-800">
-                              Français
-                            </SelectItem>
-                            <SelectItem value="es" className="text-white hover:bg-gray-800">
-                              Español
-                            </SelectItem>
-                            <SelectItem value="de" className="text-white hover:bg-gray-800">
-                              Deutsch
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Label className="text-white">Show Email</Label>
+                        <p className="text-sm text-gray-400">Display email on public profile</p>
                       </div>
+                      <Switch
+                        checked={preferences.showEmail}
+                        onCheckedChange={(checked) => setPreferences((prev) => ({ ...prev, showEmail: checked }))}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </TabsContent>
+
+            {/* Security Tab */}
+            <TabsContent value="security">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-6"
+              >
+                {/* Account Security */}
+                <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Shield className="w-5 h-5" />
+                      Account Security
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-green-900/20 border border-green-800 rounded-lg">
                       <div>
-                        <Label htmlFor="timezone" className="text-white">
-                          Timezone
-                        </Label>
-                        <Select
-                          value={profile.timezone}
-                          onValueChange={(value) => handleInputChange("timezone", value)}
-                        >
-                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-black border-gray-800">
-                            <SelectItem value="America/Los_Angeles" className="text-white hover:bg-gray-800">
-                              Pacific Time
-                            </SelectItem>
-                            <SelectItem value="America/New_York" className="text-white hover:bg-gray-800">
-                              Eastern Time
-                            </SelectItem>
-                            <SelectItem value="Europe/London" className="text-white hover:bg-gray-800">
-                              GMT
-                            </SelectItem>
-                            <SelectItem value="Europe/Paris" className="text-white hover:bg-gray-800">
-                              Central European Time
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <p className="text-white font-medium">Two-Factor Authentication</p>
+                        <p className="text-sm text-gray-400">Add an extra layer of security</p>
                       </div>
+                      <Button
+                        variant="outline"
+                        className="border-green-600 text-green-400 hover:bg-green-900/20 bg-transparent"
+                      >
+                        Enable 2FA
+                      </Button>
                     </div>
-                  </div>
-                )}
 
-                {activeTab === "notifications" && (
-                  <div className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-white font-medium">Email Notifications</h4>
-                          <p className="text-gray-400 text-sm">Receive notifications about your account activity</p>
-                        </div>
-                        <Switch
-                          checked={profile.emailNotifications}
-                          onCheckedChange={(checked) => handleInputChange("emailNotifications", checked)}
-                        />
+                    <div className="flex items-center justify-between p-4 bg-blue-900/20 border border-blue-800 rounded-lg">
+                      <div>
+                        <p className="text-white font-medium">Login Sessions</p>
+                        <p className="text-sm text-gray-400">Manage your active sessions</p>
                       </div>
-
-                      <Separator className="bg-gray-700" />
-
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-white font-medium">Marketing Emails</h4>
-                          <p className="text-gray-400 text-sm">Receive updates about new features and promotions</p>
-                        </div>
-                        <Switch
-                          checked={profile.marketingEmails}
-                          onCheckedChange={(checked) => handleInputChange("marketingEmails", checked)}
-                        />
-                      </div>
-
-                      <Separator className="bg-gray-700" />
-
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-white font-medium">Security Alerts</h4>
-                          <p className="text-gray-400 text-sm">Get notified about important security events</p>
-                        </div>
-                        <Switch
-                          checked={profile.securityAlerts}
-                          onCheckedChange={(checked) => handleInputChange("securityAlerts", checked)}
-                        />
-                      </div>
+                      <Button
+                        variant="outline"
+                        className="border-blue-600 text-blue-400 hover:bg-blue-900/20 bg-transparent"
+                      >
+                        View Sessions
+                      </Button>
                     </div>
-                  </div>
-                )}
+                  </CardContent>
+                </Card>
 
-                {activeTab === "security" && (
-                  <div className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="p-4 bg-gray-800/50 rounded-lg">
-                        <h4 className="text-white font-medium mb-2">Password</h4>
-                        <p className="text-gray-400 text-sm mb-3">Last changed 3 months ago</p>
-                        <Button
-                          variant="outline"
-                          className="border-gray-600 text-white hover:bg-gray-800 bg-transparent"
-                        >
-                          Change Password
-                        </Button>
-                      </div>
-
-                      <div className="p-4 bg-gray-800/50 rounded-lg">
-                        <h4 className="text-white font-medium mb-2">Two-Factor Authentication</h4>
-                        <p className="text-gray-400 text-sm mb-3">Add an extra layer of security to your account</p>
-                        <Button
-                          variant="outline"
-                          className="border-gray-600 text-white hover:bg-gray-800 bg-transparent"
-                        >
-                          Enable 2FA
-                        </Button>
-                      </div>
-
-                      <div className="p-4 bg-gray-800/50 rounded-lg">
-                        <h4 className="text-white font-medium mb-2">Active Sessions</h4>
-                        <p className="text-gray-400 text-sm mb-3">Manage your active sessions across devices</p>
-                        <Button
-                          variant="outline"
-                          className="border-gray-600 text-white hover:bg-gray-800 bg-transparent"
-                        >
-                          View Sessions
-                        </Button>
-                      </div>
+                {/* Danger Zone */}
+                <Card className="bg-red-900/20 backdrop-blur-sm border border-red-800 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-red-400 flex items-center gap-2">
+                      <Trash2 className="w-5 h-5" />
+                      Danger Zone
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="p-4 bg-red-900/30 border border-red-700 rounded-lg">
+                      <h4 className="text-white font-medium mb-2">Delete Account</h4>
+                      <p className="text-sm text-gray-300 mb-4">
+                        Once you delete your account, there is no going back. Please be certain.
+                      </p>
+                      <Button
+                        onClick={handleDeleteAccount}
+                        variant="destructive"
+                        className="bg-red-600 hover:bg-red-700 text-white"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Account
+                      </Button>
                     </div>
-                  </div>
-                )}
-
-                <div className="flex justify-end pt-6 border-t border-gray-700">
-                  <Button
-                    onClick={handleSave}
-                    disabled={isLoading}
-                    className="bg-gradient-to-r from-[#d03232] to-[#b82828] hover:from-[#b82828] hover:to-[#a02626] text-white px-8"
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Save Changes
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

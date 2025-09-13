@@ -13,12 +13,20 @@ export function Header() {
   const { language, setLanguage, t } = useLanguage()
   const { user, logout } = useAuth()
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+    setIsMenuOpen(false)
+  }
+
   return (
     <header className="bg-black/95 backdrop-blur-sm border-b border-red-500/20 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2" onClick={() => scrollToSection("home")}>
             <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">P</span>
             </div>
@@ -27,12 +35,21 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/tools" className="text-gray-300 hover:text-white transition-colors">
+            <button
+              onClick={() => scrollToSection("tools")}
+              className="text-gray-300 hover:text-white transition-colors"
+            >
               {t("nav.tools")}
+            </button>
+            <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">
+              {t("nav.pricing")}
             </Link>
-            <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
+            <button
+              onClick={() => scrollToSection("contact")}
+              className="text-gray-300 hover:text-white transition-colors"
+            >
               {t("nav.contact")}
-            </Link>
+            </button>
           </nav>
 
           {/* Right Side Actions */}
@@ -83,6 +100,9 @@ export function Header() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-gray-900 border-gray-700">
+                  <DropdownMenuItem asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
+                    <Link href="/profile">{t("nav.profile")}</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={logout} className="text-gray-300 hover:text-white hover:bg-gray-800">
                     {t("auth.logout")}
                   </DropdownMenuItem>
@@ -119,20 +139,25 @@ export function Header() {
         {isMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 border-t border-gray-700 pt-4">
             <div className="flex flex-col space-y-4">
-              <Link
-                href="/tools"
-                className="text-gray-300 hover:text-white transition-colors"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                onClick={() => scrollToSection("tools")}
+                className="text-gray-300 hover:text-white transition-colors text-left"
               >
                 {t("nav.tools")}
-              </Link>
+              </button>
               <Link
-                href="/contact"
+                href="/pricing"
                 className="text-gray-300 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t("nav.contact")}
+                {t("nav.pricing")}
               </Link>
+              <button
+                onClick={() => scrollToSection("contact")}
+                className="text-gray-300 hover:text-white transition-colors text-left"
+              >
+                {t("nav.contact")}
+              </button>
             </div>
           </nav>
         )}
