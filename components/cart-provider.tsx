@@ -100,8 +100,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addItem = (item: Omit<CartItem, "quantity">) => {
     dispatch({ type: "ADD_ITEM", payload: item })
     toast({
-      title: "Produit ajouté au panier",
-      description: `${item.name} a été ajouté à votre panier.`,
+      title: "Product added to cart",
+      description: `${item.name} has been added to your cart.`,
     })
   }
 
@@ -110,8 +110,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "REMOVE_ITEM", payload: id })
     if (item) {
       toast({
-        title: "Produit retiré",
-        description: `${item.name} a été retiré de votre panier.`,
+        title: "Product removed",
+        description: `${item.name} has been removed from your cart.`,
       })
     }
   }
@@ -123,8 +123,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = () => {
     dispatch({ type: "CLEAR_CART" })
     toast({
-      title: "Panier vidé",
-      description: "Tous les produits ont été retirés de votre panier.",
+      title: "Cart cleared",
+      description: "All products have been removed from your cart.",
     })
   }
 

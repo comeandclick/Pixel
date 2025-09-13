@@ -6,6 +6,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { AuthProvider } from "@/components/auth-provider"
 import { LanguageProvider } from "@/components/language-provider"
+import { CartProvider } from "@/components/cart-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 
@@ -25,15 +26,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth dark" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <LanguageProvider>
             <AuthProvider>
-              <Header />
-              <main className="min-h-screen">{children}</main>
-              <Footer />
-              <Toaster />
+              <CartProvider>
+                <Header />
+                <main className="min-h-screen">{children}</main>
+                <Footer />
+                <Toaster />
+              </CartProvider>
             </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>
