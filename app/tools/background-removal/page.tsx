@@ -4,22 +4,27 @@ import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useLanguage } from "@/components/language-provider"
-import { Upload, Download, Scissors, Loader2 } from "lucide-react"
+import { Upload, Download, Scissors, Loader2, AlertCircle } from "lucide-react"
 import { useDropzone } from "react-dropzone"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function BackgroundRemovalPage() {
   const { t } = useLanguage()
   const [originalImage, setOriginalImage] = useState<string | null>(null)
   const [processedImage, setProcessedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [originalFile, setOriginalFile] = useState<File | null>(null)
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
     if (file) {
+      setOriginalFile(file)
       const reader = new FileReader()
       reader.onload = () => {
         setOriginalImage(reader.result as string)
         setProcessedImage(null)
+        setError(null)
       }
       reader.readAsDataURL(file)
     }
@@ -31,62 +36,36 @@ export default function BackgroundRemovalPage() {
       "image/*": [".png", ".jpg", ".jpeg", ".webp"],
     },
     multiple: false,
+    maxSize: 10 * 1024 * 1024, // 10MB limit
   })
 
   const processImage = async () => {
-    if (!originalImage) return
+    if (!originalFile) return
 
     setIsProcessing(true)
+    setError(null)
 
     try {
-      // Create image element
-      const img = new Image()
-      img.crossOrigin = "anonymous"
+      const formData = new FormData()
+      formData.append("file", originalFile)
 
-      img.onload = () => {
-        // Create canvas
-        const canvas = document.createElement("canvas")
-        const ctx = canvas.getContext("2d")
+      const response = await fetch("/api/remove-bg", {
+        method: "POST",
+        body: formData,
+      })
 
-        if (!ctx) {
-          setIsProcessing(false)
-          return
-        }
-
-        canvas.width = img.width
-        canvas.height = img.height
-
-        // Draw original image
-        ctx.drawImage(img, 0, 0)
-
-        // Get image data
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const data = imageData.data
-
-        // Simple background removal algorithm (removes white/light backgrounds)
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i]
-          const g = data[i + 1]
-          const b = data[i + 2]
-
-          // If pixel is close to white/light gray, make it transparent
-          if (r > 200 && g > 200 && b > 200) {
-            data[i + 3] = 0 // Set alpha to 0 (transparent)
-          }
-        }
-
-        // Put processed image data back
-        ctx.putImageData(imageData, 0, 0)
-
-        // Convert to data URL
-        const processedDataUrl = canvas.toDataURL("image/png")
-        setProcessedImage(processedDataUrl)
-        setIsProcessing(false)
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to process image")
       }
 
-      img.src = originalImage
+      const blob = await response.blob()
+      const processedDataUrl = URL.createObjectURL(blob)
+      setProcessedImage(processedDataUrl)
     } catch (error) {
       console.error("Error processing image:", error)
+      setError(error instanceof Error ? error.message : "An error occurred while processing the image")
+    } finally {
       setIsProcessing(false)
     }
   }
@@ -106,9 +85,16 @@ export default function BackgroundRemovalPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">{t("tools.background_removal")}</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Supprimez les arrière-plans de vos images instantanément avec l'IA
+            Supprimez les arrière-plans de vos images instantanément avec l'IA avancée
           </p>
         </div>
+
+        {error && (
+          <Alert variant="destructive" className="max-w-6xl mx-auto mb-8">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Upload Section */}
@@ -118,7 +104,7 @@ export default function BackgroundRemovalPage() {
                 <Upload className="h-5 w-5" />
                 Image Originale
               </CardTitle>
-              <CardDescription>Téléchargez votre image pour supprimer l'arrière-plan</CardDescription>
+              <CardDescription>Téléchargez votre image pour supprimer l'arrière-plan avec l'IA</CardDescription>
             </CardHeader>
             <CardContent>
               {!originalImage ? (
@@ -133,7 +119,7 @@ export default function BackgroundRemovalPage() {
                   <p className="text-lg font-medium text-foreground mb-2">
                     {isDragActive ? "Déposez votre image ici" : "Glissez-déposez votre image"}
                   </p>
-                  <p className="text-muted-foreground">ou cliquez pour parcourir</p>
+                  <p className="text-muted-foreground">ou cliquez pour parcourir (max 10MB)</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -150,12 +136,12 @@ export default function BackgroundRemovalPage() {
                     {isProcessing ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        {t("common.processing")}
+                        Traitement IA en cours...
                       </>
                     ) : (
                       <>
                         <Scissors className="h-4 w-4 mr-2" />
-                        Supprimer l'arrière-plan
+                        Supprimer l'arrière-plan avec l'IA
                       </>
                     )}
                   </Button>
@@ -171,7 +157,7 @@ export default function BackgroundRemovalPage() {
                 <Download className="h-5 w-5" />
                 Image Traitée
               </CardTitle>
-              <CardDescription>Votre image avec l'arrière-plan supprimé</CardDescription>
+              <CardDescription>Votre image avec l'arrière-plan supprimé par l'IA</CardDescription>
             </CardHeader>
             <CardContent>
               {!processedImage ? (
@@ -182,18 +168,61 @@ export default function BackgroundRemovalPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <img
-                    src={processedImage || "/placeholder.svg"}
-                    alt="Processed"
-                    className="w-full h-64 object-contain rounded-lg bg-muted"
-                    style={{ backgroundColor: "transparent" }}
-                  />
+                  <div className="relative">
+                    <img
+                      src={processedImage || "/placeholder.svg"}
+                      alt="Processed"
+                      className="w-full h-64 object-contain rounded-lg"
+                      style={{
+                        backgroundColor: "transparent",
+                        backgroundImage:
+                          "linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%)",
+                        backgroundSize: "20px 20px",
+                        backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+                      }}
+                    />
+                  </div>
                   <Button onClick={downloadImage} className="w-full bg-primary hover:bg-primary/90">
                     <Download className="h-4 w-4 mr-2" />
                     {t("common.download")}
                   </Button>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="max-w-4xl mx-auto mt-12">
+          <Card className="gradient-card border-border/50">
+            <CardHeader>
+              <CardTitle>Suppression d'arrière-plan IA</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div>
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <Upload className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Téléchargez</h3>
+                  <p className="text-sm text-muted-foreground">Glissez-déposez votre image ou cliquez pour parcourir</p>
+                </div>
+                <div>
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <Scissors className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">IA Traite</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Notre IA détecte et supprime automatiquement l'arrière-plan
+                  </p>
+                </div>
+                <div>
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <Download className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Téléchargez</h3>
+                  <p className="text-sm text-muted-foreground">Obtenez votre image avec un arrière-plan transparent</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
