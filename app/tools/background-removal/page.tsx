@@ -54,7 +54,23 @@ export default function BackgroundRemovalPage() {
         body: formData,
       })
 
+      if (response.status === 202) {
+        // Feature is being prepared
+        const data = await response.json()
+        setError(
+          "La fonctionnalité de suppression d'arrière-plan IA est en cours de préparation. Veuillez réessayer plus tard.",
+        )
+        return
+      }
+
       if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to process image")
+      }
+
+      // Check if response is JSON (error) or blob (success)
+      const contentType = response.headers.get("content-type")
+      if (contentType && contentType.includes("application/json")) {
         const errorData = await response.json()
         throw new Error(errorData.error || "Failed to process image")
       }
