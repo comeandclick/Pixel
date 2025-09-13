@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useLanguage } from "@/components/language-provider"
-import { Upload, Download, Video, Loader2, AlertCircle } from "lucide-react"
+import { Upload, Download, Video, Loader2 } from "lucide-react"
 import { useDropzone } from "react-dropzone"
 
 export default function VideoCompressorPage() {
@@ -17,8 +17,9 @@ export default function VideoCompressorPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [originalSize, setOriginalSize] = useState<number>(0)
   const [compressedSize, setCompressedSize] = useState<number>(0)
-  const [quality, setQuality] = useState<number>(70)
+  const [quality, setQuality] = useState<number>(23)
   const [resolution, setResolution] = useState<string>("original")
+  const [currentFile, setCurrentFile] = useState<File | null>(null)
 
   const resolutions = [
     { value: "original", label: "Résolution originale" },
@@ -31,6 +32,7 @@ export default function VideoCompressorPage() {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
     if (file) {
+      setCurrentFile(file)
       setOriginalSize(file.size)
       const reader = new FileReader()
       reader.onload = () => {
@@ -51,72 +53,34 @@ export default function VideoCompressorPage() {
   })
 
   const compressVideo = async () => {
-    if (!originalVideo) return
+    if (!currentFile) return
 
     setIsProcessing(true)
 
     try {
-      // Create video element
-      const video = document.createElement("video")
-      video.crossOrigin = "anonymous"
-      video.muted = true
+      const formData = new FormData()
+      formData.append("file", currentFile)
+      formData.append("quality", quality.toString())
+      formData.append("resolution", resolution)
 
-      video.onloadedmetadata = () => {
-        const canvas = document.createElement("canvas")
-        const ctx = canvas.getContext("2d")
+      const response = await fetch("/api/compress-video", {
+        method: "POST",
+        body: formData,
+      })
 
-        if (!ctx) {
-          setIsProcessing(false)
-          return
-        }
-
-        // Set canvas dimensions based on selected resolution
-        let targetWidth = video.videoWidth
-        let targetHeight = video.videoHeight
-
-        switch (resolution) {
-          case "1080p":
-            targetWidth = 1920
-            targetHeight = 1080
-            break
-          case "720p":
-            targetWidth = 1280
-            targetHeight = 720
-            break
-          case "480p":
-            targetWidth = 854
-            targetHeight = 480
-            break
-          case "360p":
-            targetWidth = 640
-            targetHeight = 360
-            break
-        }
-
-        canvas.width = targetWidth
-        canvas.height = targetHeight
-
-        // For demo purposes, we'll create a compressed version by reducing quality
-        // In a real implementation, you'd use FFmpeg.js or a server-side solution
-        video.currentTime = 0
-        video.onseeked = () => {
-          ctx.drawImage(video, 0, 0, targetWidth, targetHeight)
-
-          // Convert to compressed format (simulated)
-          const compressedDataUrl = canvas.toDataURL("image/jpeg", quality / 100)
-
-          // Simulate video compression by creating a smaller data URL
-          const simulatedCompressedSize = Math.round(originalSize * (quality / 100) * 0.7)
-
-          setProcessedVideo(compressedDataUrl)
-          setCompressedSize(simulatedCompressedSize)
-          setIsProcessing(false)
-        }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      video.src = originalVideo
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+
+      setProcessedVideo(url)
+      setCompressedSize(blob.size)
+      setIsProcessing(false)
     } catch (error) {
       console.error("Error compressing video:", error)
+      alert("Une erreur s'est produite lors de la compression")
       setIsProcessing(false)
     }
   }
@@ -126,7 +90,7 @@ export default function VideoCompressorPage() {
 
     const link = document.createElement("a")
     link.href = processedVideo
-    link.download = "compressed-video.jpg" // Note: This is a demo, would be .mp4 in real implementation
+    link.download = "compressed-video.mp4"
     link.click()
   }
 
@@ -146,21 +110,6 @@ export default function VideoCompressorPage() {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Réduisez la taille de vos vidéos tout en conservant une qualité optimale
           </p>
-        </div>
-
-        {/* Demo Notice */}
-        <div className="max-w-4xl mx-auto mb-8">
-          <Card className="border-yellow-500/50 bg-yellow-500/10">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-yellow-400">
-                <AlertCircle className="h-5 w-5" />
-                <p className="text-sm">
-                  <strong>Version démo:</strong> Cette version génère une image de prévisualisation. La version complète
-                  nécessiterait FFmpeg.js pour un vrai traitement vidéo.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
@@ -216,12 +165,13 @@ export default function VideoCompressorPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="quality">Qualité: {quality}%</Label>
+                    <Label htmlFor="quality">CRF (Qualité): {quality}</Label>
+                    <p className="text-xs text-muted-foreground">Plus bas = meilleure qualité (18-28 recommandé)</p>
                     <Slider
                       id="quality"
-                      min={10}
-                      max={100}
-                      step={5}
+                      min={18}
+                      max={35}
+                      step={1}
                       value={[quality]}
                       onValueChange={(value) => setQuality(value[0])}
                       className="w-full"
@@ -257,7 +207,7 @@ export default function VideoCompressorPage() {
                 <Download className="h-5 w-5" />
                 Vidéo Compressée
               </CardTitle>
-              <CardDescription>Votre vidéo optimisée (prévisualisation)</CardDescription>
+              <CardDescription>Votre vidéo optimisée</CardDescription>
             </CardHeader>
             <CardContent>
               {!processedVideo ? (
@@ -268,21 +218,22 @@ export default function VideoCompressorPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <img
-                    src={processedVideo || "/placeholder.svg"}
-                    alt="Video Preview"
-                    className="w-full h-64 object-contain rounded-lg bg-muted"
+                  <video
+                    src={processedVideo}
+                    controls
+                    className="w-full h-64 rounded-lg bg-muted"
+                    style={{ objectFit: "contain" }}
                   />
                   <div className="text-sm text-muted-foreground space-y-1">
-                    <div>Taille estimée: {formatFileSize(compressedSize)}</div>
+                    <div>Taille compressée: {formatFileSize(compressedSize)}</div>
                     <div className="text-green-400">
-                      Économie estimée: {formatFileSize(originalSize - compressedSize)} (
+                      Économie: {formatFileSize(originalSize - compressedSize)} (
                       {Math.round(((originalSize - compressedSize) / originalSize) * 100)}%)
                     </div>
                   </div>
                   <Button onClick={downloadVideo} className="w-full bg-primary hover:bg-primary/90">
                     <Download className="h-4 w-4 mr-2" />
-                    Télécharger la prévisualisation
+                    Télécharger la vidéo
                   </Button>
                 </div>
               )}

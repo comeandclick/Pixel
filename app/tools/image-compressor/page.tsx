@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useLanguage } from "@/components/language-provider"
 import { Upload, Download, ImageIcon, Loader2 } from "lucide-react"
 import { useDropzone } from "react-dropzone"
@@ -17,10 +18,20 @@ export default function ImageCompressorPage() {
   const [originalSize, setOriginalSize] = useState<number>(0)
   const [compressedSize, setCompressedSize] = useState<number>(0)
   const [quality, setQuality] = useState<number>(80)
+  const [format, setFormat] = useState<string>("webp")
+  const [currentFile, setCurrentFile] = useState<File | null>(null)
+
+  const formats = [
+    { value: "webp", label: "WebP" },
+    { value: "jpeg", label: "JPEG" },
+    { value: "png", label: "PNG" },
+    { value: "avif", label: "AVIF" },
+  ]
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
     if (file) {
+      setCurrentFile(file)
       setOriginalSize(file.size)
       const reader = new FileReader()
       reader.onload = () => {
@@ -41,43 +52,34 @@ export default function ImageCompressorPage() {
   })
 
   const compressImage = async () => {
-    if (!originalImage) return
+    if (!currentFile) return
 
     setIsProcessing(true)
 
     try {
-      const img = new Image()
-      img.crossOrigin = "anonymous"
+      const formData = new FormData()
+      formData.append("file", currentFile)
+      formData.append("quality", quality.toString())
+      formData.append("format", format)
 
-      img.onload = () => {
-        const canvas = document.createElement("canvas")
-        const ctx = canvas.getContext("2d")
+      const response = await fetch("/api/compress-image", {
+        method: "POST",
+        body: formData,
+      })
 
-        if (!ctx) {
-          setIsProcessing(false)
-          return
-        }
-
-        canvas.width = img.width
-        canvas.height = img.height
-
-        // Draw image on canvas
-        ctx.drawImage(img, 0, 0)
-
-        // Compress image with specified quality
-        const compressedDataUrl = canvas.toDataURL("image/jpeg", quality / 100)
-
-        // Calculate compressed size (approximate)
-        const compressedSizeBytes = Math.round((compressedDataUrl.length * 3) / 4)
-
-        setProcessedImage(compressedDataUrl)
-        setCompressedSize(compressedSizeBytes)
-        setIsProcessing(false)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      img.src = originalImage
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+
+      setProcessedImage(url)
+      setCompressedSize(blob.size)
+      setIsProcessing(false)
     } catch (error) {
       console.error("Error compressing image:", error)
+      alert("Une erreur s'est produite lors de la compression")
       setIsProcessing(false)
     }
   }
@@ -87,7 +89,7 @@ export default function ImageCompressorPage() {
 
     const link = document.createElement("a")
     link.href = processedImage
-    link.download = "compressed-image.jpg"
+    link.download = `compressed-image.${format}`
     link.click()
   }
 
@@ -140,6 +142,23 @@ export default function ImageCompressorPage() {
                     className="w-full h-64 object-contain rounded-lg bg-muted"
                   />
                   <div className="text-sm text-muted-foreground">Taille originale: {formatFileSize(originalSize)}</div>
+
+                  {/* Format Selection */}
+                  <div>
+                    <Label htmlFor="format">Format de sortie</Label>
+                    <Select value={format} onValueChange={setFormat}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Choisir un format" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {formats.map((fmt) => (
+                          <SelectItem key={fmt.value} value={fmt.value}>
+                            {fmt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="quality">Qualité: {quality}%</Label>

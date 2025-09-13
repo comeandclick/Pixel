@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
 import { useLanguage } from "@/components/language-provider"
 import { Upload, Download, RefreshCw, Loader2 } from "lucide-react"
 import { useDropzone } from "react-dropzone"
@@ -16,19 +15,20 @@ export default function FormatConverterPage() {
   const [processedImage, setProcessedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [originalFormat, setOriginalFormat] = useState<string>("")
-  const [targetFormat, setTargetFormat] = useState<string>("png")
-  const [quality, setQuality] = useState<number>(90)
+  const [targetFormat, setTargetFormat] = useState<string>("webp")
+  const [currentFile, setCurrentFile] = useState<File | null>(null)
 
   const formats = [
-    { value: "png", label: "PNG", hasQuality: false },
-    { value: "jpg", label: "JPG", hasQuality: true },
-    { value: "jpeg", label: "JPEG", hasQuality: true },
-    { value: "webp", label: "WebP", hasQuality: true },
+    { value: "webp", label: "WebP" },
+    { value: "png", label: "PNG" },
+    { value: "jpeg", label: "JPEG" },
+    { value: "avif", label: "AVIF" },
   ]
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
     if (file) {
+      setCurrentFile(file)
       const format = file.name.split(".").pop()?.toLowerCase() || ""
       setOriginalFormat(format)
       const reader = new FileReader()
@@ -49,51 +49,32 @@ export default function FormatConverterPage() {
   })
 
   const convertImage = async () => {
-    if (!originalImage) return
+    if (!currentFile) return
 
     setIsProcessing(true)
 
     try {
-      const img = new Image()
-      img.crossOrigin = "anonymous"
+      const formData = new FormData()
+      formData.append("file", currentFile)
+      formData.append("format", targetFormat)
 
-      img.onload = () => {
-        const canvas = document.createElement("canvas")
-        const ctx = canvas.getContext("2d")
+      const response = await fetch("/api/convert-image", {
+        method: "POST",
+        body: formData,
+      })
 
-        if (!ctx) {
-          setIsProcessing(false)
-          return
-        }
-
-        canvas.width = img.width
-        canvas.height = img.height
-
-        // Handle transparency for formats that don't support it
-        if (targetFormat === "jpg" || targetFormat === "jpeg") {
-          // Fill with white background for JPEG
-          ctx.fillStyle = "#FFFFFF"
-          ctx.fillRect(0, 0, canvas.width, canvas.height)
-        }
-
-        // Draw image on canvas
-        ctx.drawImage(img, 0, 0)
-
-        // Convert to target format
-        let mimeType = `image/${targetFormat}`
-        if (targetFormat === "jpg") mimeType = "image/jpeg"
-
-        const convertedDataUrl = formats.find((f) => f.value === targetFormat)?.hasQuality
-          ? canvas.toDataURL(mimeType, quality / 100)
-          : canvas.toDataURL(mimeType)
-
-        setProcessedImage(convertedDataUrl)
-        setIsProcessing(false)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      img.src = originalImage
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+
+      setProcessedImage(url)
+      setIsProcessing(false)
     } catch (error) {
       console.error("Error converting image:", error)
+      alert("Une erreur s'est produite lors de la conversion")
       setIsProcessing(false)
     }
   }
@@ -106,8 +87,6 @@ export default function FormatConverterPage() {
     link.download = `converted-image.${targetFormat}`
     link.click()
   }
-
-  const selectedFormat = formats.find((f) => f.value === targetFormat)
 
   return (
     <div className="min-h-screen py-12">
@@ -166,21 +145,6 @@ export default function FormatConverterPage() {
                       </SelectContent>
                     </Select>
                   </div>
-
-                  {selectedFormat?.hasQuality && (
-                    <div className="space-y-2">
-                      <Label htmlFor="quality">Qualité: {quality}%</Label>
-                      <Slider
-                        id="quality"
-                        min={10}
-                        max={100}
-                        step={5}
-                        value={[quality]}
-                        onValueChange={(value) => setQuality(value[0])}
-                        className="w-full"
-                      />
-                    </div>
-                  )}
 
                   <Button
                     onClick={convertImage}
