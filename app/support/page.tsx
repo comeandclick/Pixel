@@ -117,9 +117,7 @@ export default function SupportPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Choose Your Support Channel</h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Multiple ways to get help when you need it most
-            </p>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">Multiple ways to get help when you need it most</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-16">
@@ -244,11 +242,57 @@ export default function SupportPage() {
                         <Label htmlFor="priority" className="text-white">
                           Priority
                         </Label>
-                        <Select value={formData.priority} onValueChange={(value) => handleInputChange("priority", value)}>
+                        <Select
+                          value={formData.priority}
+                          onValueChange={(value) => handleInputChange("priority", value)}
+                        >
                           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                             <SelectValue placeholder="Select priority level" />
                           </SelectTrigger>
                           <SelectContent className="bg-black border-gray-800">
                             {priorities.map((priority) => (
-                              <SelectItem key={priority.value} value={priority.value} className="text-white hover:bg-gray-800">
-                                {priority.label}\
+                              <SelectItem
+                                key={priority.value}
+                                value={priority.value}
+                                className="text-white hover:bg-gray-800"
+                              >
+                                {priority.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="message" className="text-white">
+                        Message *
+                      </Label>
+                      <textarea
+                        id="message"
+                        required
+                        rows={6}
+                        value={formData.message}
+                        onChange={(e) => handleInputChange("message", e.target.value)}
+                        className="w-full bg-gray-800 border border-gray-700 text-white rounded-md px-3 py-2 focus:border-[#d03232] focus:outline-none resize-none"
+                        placeholder="Please describe your issue in detail..."
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-gradient-to-r from-[#d03232] to-[#b82828] hover:from-[#b82828] hover:to-[#a02626] text-white py-3"
+                    >
+                      {isSubmitting ? "Submitting..." : "Submit Support Ticket"}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
