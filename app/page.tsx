@@ -158,7 +158,7 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <Badge className="bg-[#d03232]/10 text-[#d03232] border border-[#d03232]/20 px-4 py-2 mb-6">
+            <Badge className="bg-[#d03232]/10 text-white border border-[#d03232]/20 px-4 py-2 mb-6">
               ✨ {t("hero.new_ai_tools")}
             </Badge>
 
