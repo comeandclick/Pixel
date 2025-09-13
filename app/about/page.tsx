@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge"
 import { Users, Target, Award, Zap } from "lucide-react"
 
 const team = [
-  { name: "Alex Chen", role: "CEO & Founder", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Sarah Johnson", role: "CTO", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Mike Rodriguez", role: "Head of AI", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Emily Davis", role: "Head of Design", image: "/placeholder.svg?height=200&width=200" },
+  { name: "Alex Chen", role: "CEO & Founder" },
+  { name: "Sarah Johnson", role: "CTO" },
+  { name: "Mike Rodriguez", role: "Head of AI" },
+  { name: "Emily Davis", role: "Head of Design" },
 ]
 
 const values = [
@@ -70,8 +70,13 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
+              className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-8 text-center"
             >
-              <img src="/placeholder.svg?height=400&width=600" alt="Team working" className="rounded-lg shadow-xl" />
+              <div className="w-24 h-24 bg-[#d03232] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-12 h-12 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">AI-Powered Innovation</h3>
+              <p className="text-gray-300">Transforming creative workflows with intelligent automation</p>
             </motion.div>
           </div>
         </div>
@@ -144,11 +149,9 @@ export default function AboutPage() {
               >
                 <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
                   <CardContent className="p-6 text-center">
-                    <img
-                      src={member.image || "/placeholder.svg"}
-                      alt={member.name}
-                      className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
-                    />
+                    <div className="w-24 h-24 bg-gradient-to-br from-[#d03232] to-[#b82828] rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl font-bold text-white">{member.name.charAt(0)}</span>
+                    </div>
                     <h3 className="text-lg font-bold text-white mb-1">{member.name}</h3>
                     <p className="text-[#d03232] text-sm">{member.role}</p>
                   </CardContent>

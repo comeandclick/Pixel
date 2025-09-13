@@ -12,7 +12,6 @@ const posts = [
     author: "Alex Chen",
     date: "March 15, 2024",
     category: "AI & Technology",
-    image: "/placeholder.svg?height=300&width=500",
     slug: "future-ai-creative-industries",
   },
   {
@@ -21,7 +20,6 @@ const posts = [
     author: "Sarah Johnson",
     date: "March 10, 2024",
     category: "Tutorial",
-    image: "/placeholder.svg?height=300&width=500",
     slug: "image-compression-tips",
   },
   {
@@ -30,7 +28,6 @@ const posts = [
     author: "Mike Rodriguez",
     date: "March 5, 2024",
     category: "Technology",
-    image: "/placeholder.svg?height=300&width=500",
     slug: "background-removal-evolution",
   },
   {
@@ -39,7 +36,6 @@ const posts = [
     author: "Emily Davis",
     date: "February 28, 2024",
     category: "Design",
-    image: "/placeholder.svg?height=300&width=500",
     slug: "accessible-design-tools",
   },
 ]
@@ -108,13 +104,13 @@ export default function BlogPage() {
               >
                 <Link href={`/blog/${post.slug}`}>
                   <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl hover:shadow-2xl transition-all duration-300 h-full cursor-pointer group">
-                    <div className="relative overflow-hidden rounded-t-lg">
-                      <img
-                        src={post.image || "/placeholder.svg"}
-                        alt={post.title}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <Badge className="absolute top-4 left-4 bg-[#d03232] text-white">{post.category}</Badge>
+                    <div className="relative overflow-hidden rounded-t-lg bg-gradient-to-br from-[#d03232]/20 to-[#b82828]/20 h-48 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-[#d03232] rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-2xl font-bold text-white">{post.title.charAt(0)}</span>
+                        </div>
+                        <Badge className="bg-[#d03232] text-white">{post.category}</Badge>
+                      </div>
                     </div>
                     <CardHeader>
                       <CardTitle className="text-white group-hover:text-[#d03232] transition-colors">
