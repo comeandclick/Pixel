@@ -8,9 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   ImageIcon,
   Scissors,
@@ -24,7 +21,6 @@ import {
   Clock,
   CheckCircle,
   Mail,
-  Headphones,
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { useToast } from "@/hooks/use-toast"
@@ -105,6 +101,8 @@ export default function HomePage() {
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [newsletterEmail, setNewsletterEmail] = useState("")
+  const [isSubscribing, setIsSubscribing] = useState(false)
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -131,10 +129,27 @@ export default function HomePage() {
     }, 2000)
   }
 
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newsletterEmail) return
+
+    setIsSubscribing(true)
+
+    // Simulate newsletter subscription
+    setTimeout(() => {
+      setIsSubscribing(false)
+      toast({
+        title: t("footer.newsletter_success"),
+        description: t("footer.newsletter_success_desc"),
+      })
+      setNewsletterEmail("")
+    }, 2000)
+  }
+
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Section */}
-      <section id="home" className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#d03232]/10 via-transparent to-[#d03232]/5" />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -199,7 +214,7 @@ export default function HomePage() {
       </section>
 
       {/* Tools Section */}
-      <section id="tools" className="py-20">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -287,6 +302,50 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Newsletter Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-900 to-black">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">{t("footer.newsletter")}</h2>
+            <p className="text-xl text-gray-300 mb-8 leading-relaxed">{t("footer.newsletter_desc")}</p>
+
+            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <Input
+                type="email"
+                required
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232] flex-1"
+              />
+              <Button
+                type="submit"
+                disabled={isSubscribing}
+                className="bg-gradient-to-r from-[#d03232] to-[#b82828] hover:from-[#b82828] hover:to-[#a02626] text-white font-medium px-6 shadow-lg shadow-[#d03232]/20"
+              >
+                {isSubscribing ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    {t("footer.subscribing")}
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-4 h-4 mr-2" />
+                    {t("footer.subscribe")}
+                  </>
+                )}
+              </Button>
+            </form>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-[#d03232]/10 to-transparent" />
@@ -318,174 +377,6 @@ export default function HomePage() {
               </Button>
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className="py-16 border-t border-gray-800">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <h3 className="text-3xl font-bold text-white mb-4">{t("footer.newsletter")}</h3>
-            <p className="text-lg text-gray-300 mb-8">{t("footer.newsletter_desc")}</p>
-
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <Input
-                type="email"
-                placeholder="your@email.com"
-                className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-              />
-              <Button className="bg-gradient-to-r from-[#d03232] to-[#b82828] hover:from-[#b82828] hover:to-[#a02626] text-white">
-                <Mail className="w-4 h-4 mr-2" />
-                {t("footer.subscribe")}
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gradient-to-br from-gray-900 to-black border-t border-gray-800">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge className="bg-[#d03232]/10 text-[#d03232] border border-[#d03232]/20 px-4 py-2 mb-6">
-              <Headphones className="w-4 h-4 mr-2" />
-              {t("contact.customer_support")}
-            </Badge>
-
-            <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6">{t("contact.title")}</h2>
-
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">{t("contact.subtitle")}</p>
-          </motion.div>
-
-          {/* Contact Form */}
-          <div className="max-w-2xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <Card className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-xl">
-                <CardHeader>
-                  <CardTitle className="text-white text-2xl text-center">{t("contact.send_message")}</CardTitle>
-                  <p className="text-gray-400 text-center">{t("contact.form_description")}</p>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="name" className="text-white">
-                          {t("contact.full_name")} *
-                        </Label>
-                        <Input
-                          id="name"
-                          required
-                          value={formData.name}
-                          onChange={(e) => handleInputChange("name", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder={t("contact.your_name")}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="email" className="text-white">
-                          Email *
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          value={formData.email}
-                          onChange={(e) => handleInputChange("email", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder="your@email.com"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="department" className="text-white">
-                          {t("contact.department")}
-                        </Label>
-                        <Select
-                          value={formData.department}
-                          onValueChange={(value) => handleInputChange("department", value)}
-                        >
-                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                            <SelectValue placeholder={t("contact.choose_department")} />
-                          </SelectTrigger>
-                          <SelectContent className="bg-black border-gray-800">
-                            {departments.map((dept) => (
-                              <SelectItem key={dept.value} value={dept.value} className="text-white hover:bg-gray-800">
-                                {t(dept.label)}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="subject" className="text-white">
-                          {t("contact.subject")} *
-                        </Label>
-                        <Input
-                          id="subject"
-                          required
-                          value={formData.subject}
-                          onChange={(e) => handleInputChange("subject", e.target.value)}
-                          className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232]"
-                          placeholder={t("contact.message_subject")}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="message" className="text-white">
-                        {t("contact.message")} *
-                      </Label>
-                      <Textarea
-                        id="message"
-                        required
-                        value={formData.message}
-                        onChange={(e) => handleInputChange("message", e.target.value)}
-                        className="bg-gray-800 border-gray-700 text-white focus:border-[#d03232] min-h-[120px]"
-                        placeholder={t("contact.your_message")}
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-[#d03232] to-[#b82828] hover:from-[#b82828] hover:to-[#a02626] text-white font-medium py-3 shadow-lg shadow-[#d03232]/20"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                          {t("contact.sending")}
-                        </>
-                      ) : (
-                        <>
-                          <Mail className="w-4 h-4 mr-2" />
-                          {t("contact.send")}
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
         </div>
       </section>
     </div>
