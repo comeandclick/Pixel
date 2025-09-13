@@ -1,6 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Analytics } from "@vercel/analytics/next"
 import { LanguageProvider } from "@/components/language-provider"
 import { AuthProvider } from "@/components/auth-provider"
 import { ActivityProvider } from "@/components/activity-tracker"
@@ -39,7 +38,6 @@ export default function RootLayout({
             </AuthProvider>
           </LanguageProvider>
         </Suspense>
-        <Analytics />
       </body>
     </html>
   )
